@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Таймлайн истории России — Иллюминированный</title>
+<style>
+  /* ===== БАЗА ===== */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-family: 'DejaVu Sans', sans-serif; }
+  body {
+    width: 9600px;
+    background: #1a1a1a;
+    padding: 0;
+    overflow-x: visible;
+  }
+
+  /* ===== ОБЩАЯ ШАПКА ===== */
+  .title-section {
+    background: linear-gradient(180deg, #0d0d0d 0%, #1a1a1a 100%);
+    color: white;
+    padding: 60px 80px 50px;
+    border-bottom: 3px solid #C9A961;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .title-section h1 {
+    font-family: 'DejaVu Serif', serif;
+    font-size: 78px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .title-section h1 .gold { color: #C9A961; }
+  .title-section .sub {
+    font-size: 22px;
+    color: #aaa;
+    margin-top: 16px;
+    font-style: italic;
+  }
+  .title-section .meta {
+    text-align: right;
+    color: #ddd;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  .legend {
+    margin-top: 20px;
+    display: flex;
+    gap: 26px;
+    justify-content: flex-end;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    color: #eee;
+  }
+  .legend-swatch {
+    width: 22px; height: 22px;
+    border-radius: 4px;
+  }
+
+  /* ===== СЕТКА ПЕРИОДОВ ===== */
+  .periods-row {
+    display: flex;
+  }
+  .period {
+    flex: 1 1 0;
+    min-width: 0;
+    position: relative;
+    padding: 50px 40px 90px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .period-header {
+    margin-bottom: 36px;
+    position: relative;
+    z-index: 2;
+  }
+  .period-header .num {
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .period-header h2 {
+    font-size: 42px;
+    line-height: 1.05;
+    margin-top: 6px;
+  }
+  .period-header .span {
+    font-size: 18px;
+    margin-top: 8px;
+    font-style: italic;
+    opacity: 0.9;
+  }
+  .period-header .intro {
+    font-size: 14px;
+    line-height: 1.55;
+    margin-top: 16px;
+    max-width: 100%;
+    text-align: justify;
+  }
+
+  .cards-row {
+    display: flex;
+    gap: 14px;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    align-items: stretch;
+  }
+  .card {
+    flex: 1;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+  }
+  .card .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .card .date {
+    font-size: 12px;
+    font-style: italic;
+    white-space: nowrap;
+  }
+  .card h3 {
+    font-size: 18px;
+    line-height: 1.25;
+    margin: 4px 0;
+  }
+  .card .body {
+    font-size: 12.5px;
+    line-height: 1.5;
+    flex: 1;
+    text-align: justify;
+  }
+  .card .source {
+    font-size: 11px;
+    font-style: italic;
+    margin-top: 8px;
+    word-break: break-word;
+  }
+
+  /* Type-tag base */
+  .type-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 3px;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .type-event  { background: #2E86C1; }
+  .type-person { background: #E67E22; }
+  .type-phenom { background: #8E44AD; }
+  .type-idea   { background: #C0392B; }
+
+  /* ============================================================
+     ПЕРИОД 1: ДРЕВНЯЯ РУСЬ — ПЕРГАМЕНТ / СВИТОК
+     ============================================================ */
+  .scroll-theme {
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(255, 240, 200, 0.5) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(120, 60, 20, 0.15) 0%, transparent 50%),
+      repeating-linear-gradient(
+        0deg,
+        transparent 0px, transparent 6px,
+        rgba(110, 60, 20, 0.025) 6px, rgba(110, 60, 20, 0.025) 7px
+      ),
+      linear-gradient(180deg, #f4e8c8 0%, #e8d5a4 50%, #d4b87a 100%);
+    color: #4A2810;
+    border-left: 6px double #8B4513;
+    border-right: 6px double #8B4513;
+  }
+  /* Stains and aging */
+  .scroll-theme::before {
+    content: '';
+    position: absolute;
+    top: 30px; right: 60px;
+    width: 80px; height: 80px;
+    background: radial-gradient(circle, #8B0000 0%, #5C0000 50%, transparent 75%);
+    border-radius: 50%;
+    opacity: 0.85;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    z-index: 1;
+  }
+  .scroll-theme::after {
+    content: 'ПЕЧАТЬ';
+    position: absolute;
+    top: 56px; right: 76px;
+    color: #f4e8c8;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    font-family: 'DejaVu Serif', serif;
+    z-index: 1;
+    transform: rotate(-12deg);
+  }
+  .scroll-theme .period-header .num {
+    color: #8B4513;
+    font-style: italic;
+  }
+  .scroll-theme .period-header h2 {
+    font-family: 'DejaVu Serif', serif;
+    color: #5C1F0A;
+    font-style: italic;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
+  }
+  .scroll-theme .period-header .span,
+  .scroll-theme .period-header .intro {
+    color: #6B3010;
+  }
+  .scroll-theme .ornament {
+    height: 24px;
+    margin: 8px 0 20px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='24' viewBox='0 0 40 24'><path d='M0 12 L8 6 L12 12 L20 4 L28 12 L32 6 L40 12 L32 18 L28 12 L20 20 L12 12 L8 18 Z' fill='none' stroke='%238B4513' stroke-width='1.5'/></svg>");
+    background-repeat: repeat-x;
+    background-position: center;
+    opacity: 0.7;
+  }
+  .scroll-theme .card {
+    background:
+      radial-gradient(ellipse at center, #f7eecf 0%, #ead9a8 100%);
+    border: 1px solid #8B4513;
+    box-shadow:
+      0 2px 6px rgba(92, 51, 23, 0.3),
+      inset 0 0 20px rgba(139, 69, 19, 0.08);
+    border-radius: 2px;
+    position: relative;
+  }
+  .scroll-theme .card::before {
+    content: '';
+    position: absolute;
+    top: -1px; bottom: -1px;
+    left: 0; width: 4px;
+    background: linear-gradient(180deg, #8B4513 0%, #5C3317 50%, #8B4513 100%);
+  }
+  .scroll-theme .card h3 {
+    font-family: 'DejaVu Serif', serif;
+    color: #4A2810;
+    font-weight: 700;
+  }
+  .scroll-theme .card .body {
+    color: #3D1F08;
+    font-family: 'DejaVu Serif', serif;
+  }
+  .scroll-theme .card .date { color: #6B3010; }
+  .scroll-theme .card .source { color: #6B3010; }
+
+  /* ============================================================
+     ПЕРИОД 2: МОСКОВСКОЕ ГОСУДАРСТВО — ДЕРЕВЯННЫЙ КРЕМЛЬ
+     ============================================================ */
+  .wood-theme {
+    background:
+      repeating-linear-gradient(
+        0deg,
+        #4a2f1a 0px, #4a2f1a 3px,
+        #3d2415 3px, #3d2415 4px,
+        #5a3826 4px, #5a3826 9px,
+        #4a2f1a 9px, #4a2f1a 14px,
+        #6b4226 14px, #6b4226 18px,
+        #4a2f1a 18px, #4a2f1a 22px
+      ),
+      linear-gradient(180deg, #5a3826 0%, #2C1810 100%);
+    color: #F5DEB3;
+    border-top: 8px solid #1a0e05;
+    border-bottom: 8px solid #1a0e05;
+  }
+  /* Onion domes silhouette */
+  .wood-theme::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='60' viewBox='0 0 200 60' preserveAspectRatio='none'><path d='M0 60 L0 50 L20 50 L20 30 Q20 15 30 15 Q30 10 32 10 L32 4 Q32 0 33 0 Q34 0 34 4 L34 10 Q36 10 36 15 Q46 15 46 30 L46 50 L60 50 L60 35 Q60 22 72 22 Q72 18 74 18 L74 12 Q74 8 75 8 Q76 8 76 12 L76 18 Q78 18 78 22 Q90 22 90 35 L90 50 L110 50 L110 30 Q110 15 122 15 Q122 10 124 10 L124 4 Q124 0 125 0 Q126 0 126 4 L126 10 Q128 10 128 15 Q140 15 140 30 L140 50 L160 50 L160 38 Q160 25 170 25 Q170 21 172 21 L172 15 Q172 11 173 11 Q174 11 174 15 L174 21 Q176 21 176 25 Q186 25 186 38 L186 50 L200 50 L200 60 Z' fill='%231a0e05'/></svg>");
+    background-repeat: repeat-x;
+    background-size: 200px 60px;
+    opacity: 0.7;
+    z-index: 1;
+  }
+  .wood-theme .period-header .num {
+    color: #D4A574;
+    letter-spacing: 5px;
+  }
+  .wood-theme .period-header h2 {
+    color: #F5DEB3;
+    font-family: 'DejaVu Serif', serif;
+    font-weight: 700;
+    text-shadow:
+      2px 2px 0 #1a0e05,
+      0 0 12px rgba(139, 69, 19, 0.5);
+    letter-spacing: 1px;
+  }
+  .wood-theme .period-header .span { color: #D4A574; }
+  .wood-theme .period-header .intro {
+    color: #E8C998;
+    background: rgba(20, 10, 5, 0.4);
+    padding: 12px 16px;
+    border-left: 3px solid #C9A961;
+    border-radius: 0 4px 4px 0;
+  }
+  .wood-theme .card {
+    background:
+      linear-gradient(180deg, #F4E4C1 0%, #E8D5B0 50%, #D4B896 100%);
+    border: 4px solid #3d2415;
+    box-shadow:
+      0 4px 8px rgba(0,0,0,0.5),
+      inset 0 0 0 1px #8B4513,
+      inset 0 0 15px rgba(139, 69, 19, 0.12);
+    border-radius: 2px;
+    color: #2C1810;
+  }
+  /* Iron rivets in corners */
+  .wood-theme .card::before,
+  .wood-theme .card::after {
+    content: '';
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #6b6b6b 0%, #2C1810 60%, #000 100%);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  }
+  .wood-theme .card::before { top: 4px; left: 4px; }
+  .wood-theme .card::after { top: 4px; right: 4px; }
+  .wood-theme .card h3 {
+    color: #2C1810;
+    font-family: 'DejaVu Serif', serif;
+    font-weight: 700;
+  }
+  .wood-theme .card .body { color: #3D2010; }
+  .wood-theme .card .date { color: #5C3317; }
+  .wood-theme .card .source { color: #5C3317; }
+
+  /* ============================================================
+     ПЕРИОД 3: РОССИЙСКАЯ ИМПЕРИЯ — БЕЛЫЙ КРЕМЛЬ / МРАМОР И ЗОЛОТО
+     ============================================================ */
+  .imperial-theme {
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(201, 169, 97, 0.18) 0%, transparent 60%),
+      linear-gradient(180deg, #FAF5E6 0%, #F0E6D2 50%, #E5D7B3 100%);
+    color: #3D2A0F;
+    border-top: 4px solid #C9A961;
+    border-bottom: 4px solid #C9A961;
+  }
+  /* Double-headed eagle watermark */
+  .imperial-theme::before {
+    content: '';
+    position: absolute;
+    top: 20px; right: 30px;
+    width: 130px; height: 130px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='%23C9A961' opacity='0.55'><path d='M50 25 Q42 18 30 22 Q24 26 26 36 Q22 32 18 40 Q22 44 30 42 Q26 50 32 56 Q40 54 42 46 L46 50 L46 78 L42 80 L46 84 L50 80 Z'/><path d='M50 25 Q58 18 70 22 Q76 26 74 36 Q78 32 82 40 Q78 44 70 42 Q74 50 68 56 Q60 54 58 46 L54 50 L54 78 L58 80 L54 84 L50 80 Z'/><path d='M44 55 L56 55 L56 75 L50 78 L44 75 Z' fill='%23C9A961' opacity='0.7'/><circle cx='32' cy='30' r='2'/><circle cx='68' cy='30' r='2'/><path d='M44 12 L50 4 L56 12 L52 14 L50 10 L48 14 Z'/></g></svg>");
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: 1;
+  }
+  /* Bottom gold flourish */
+  .imperial-theme::after {
+    content: '';
+    position: absolute;
+    bottom: 12px; left: 0; right: 0;
+    height: 16px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='16' viewBox='0 0 60 16'><path d='M0 8 Q10 0 20 8 Q30 16 40 8 Q50 0 60 8' stroke='%23C9A961' stroke-width='1.5' fill='none' opacity='0.6'/><circle cx='30' cy='8' r='2' fill='%23C9A961' opacity='0.7'/></svg>");
+    background-repeat: repeat-x;
+  }
+  .imperial-theme .period-header .num {
+    color: #8B6914;
+    letter-spacing: 6px;
+  }
+  .imperial-theme .period-header h2 {
+    color: #5C3F0A;
+    font-family: 'DejaVu Serif', serif;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border-bottom: 2px solid #C9A961;
+    padding-bottom: 10px;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+    display: inline-block;
+  }
+  .imperial-theme .period-header .span { color: #8B6914; }
+  .imperial-theme .period-header .intro { color: #4A3010; }
+  .imperial-theme .card {
+    background: linear-gradient(180deg, #FFFEF9 0%, #F8F1E0 100%);
+    border: 1px solid #C9A961;
+    box-shadow:
+      0 4px 16px rgba(109, 76, 15, 0.18),
+      inset 0 0 0 3px #FFFEF9,
+      inset 0 0 0 4px #C9A961;
+    border-radius: 2px;
+    color: #3D2A0F;
+  }
+  /* Decorative corner ornaments */
+  .imperial-theme .card::before,
+  .imperial-theme .card::after {
+    content: '❖';
+    position: absolute;
+    color: #C9A961;
+    font-size: 12px;
+    line-height: 1;
+    opacity: 0.7;
+  }
+  .imperial-theme .card::before { top: 8px; right: 10px; }
+  .imperial-theme .card::after { bottom: 8px; left: 10px; }
+  .imperial-theme .card h3 {
+    color: #5C3F0A;
+    font-family: 'DejaVu Serif', serif;
+    font-weight: 700;
+  }
+  .imperial-theme .card .body {
+    color: #2D1F08;
+    font-family: 'DejaVu Serif', serif;
+  }
+  .imperial-theme .card .date {
+    color: #8B6914;
+    font-weight: 700;
+  }
+  .imperial-theme .card .source { color: #8B6914; }
+
+  /* ============================================================
+     ПЕРИОД 4: СОВЕТСКИЙ — КРАСНОЕ ПОЛОТНО / КОНСТРУКТИВИЗМ
+     ============================================================ */
+  .soviet-theme {
+    background:
+      linear-gradient(135deg,
+        #8B0000 0%, #B71C1C 25%, #C42020 50%, #A91818 75%, #8B0000 100%
+      ),
+      repeating-linear-gradient(
+        45deg,
+        transparent 0px, transparent 60px,
+        rgba(0,0,0,0.08) 60px, rgba(0,0,0,0.08) 62px
+      );
+    color: #FFFFFF;
+    border-top: 8px solid #1a0000;
+    border-bottom: 8px solid #1a0000;
+  }
+  /* Red star top-right */
+  .soviet-theme::before {
+    content: '';
+    position: absolute;
+    top: 24px; right: 30px;
+    width: 110px; height: 110px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 5 L61 38 L96 38 L68 58 L78 92 L50 72 L22 92 L32 58 L4 38 L39 38 Z' fill='%23FFD700' stroke='%23000' stroke-width='1.5'/></svg>");
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: 1;
+    filter: drop-shadow(0 3px 4px rgba(0,0,0,0.4));
+  }
+  /* Diagonal constructivist accent */
+  .soviet-theme::after {
+    content: '';
+    position: absolute;
+    bottom: -50px; left: -50px;
+    width: 300px; height: 300px;
+    background: rgba(0, 0, 0, 0.35);
+    transform: rotate(-15deg);
+    z-index: 1;
+  }
+  .soviet-theme .period-header { z-index: 3; }
+  .soviet-theme .period-header .num {
+    color: #FFD700;
+    letter-spacing: 6px;
+    font-weight: 700;
+  }
+  .soviet-theme .period-header h2 {
+    color: #FFFFFF;
+    font-family: 'DejaVu Sans', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    line-height: 0.95;
+    text-shadow: 4px 4px 0 #000000;
+  }
+  .soviet-theme .period-header .span {
+    color: #FFD700;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .soviet-theme .period-header .intro {
+    color: #FFFFFF;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 12px 16px;
+    border-left: 5px solid #FFD700;
+  }
+  .soviet-theme .card {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F5F5F5 100%);
+    border-left: 10px solid #000000;
+    border-top: 3px solid #000000;
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.4);
+    color: #1a1a1a;
+    border-radius: 0;
+  }
+  .soviet-theme .card h3 {
+    color: #8B0000;
+    font-family: 'DejaVu Sans', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    font-size: 17px;
+    line-height: 1.15;
+  }
+  .soviet-theme .card .body { color: #1a1a1a; }
+  .soviet-theme .card .date {
+    color: #8B0000;
+    font-weight: 700;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 11px;
+  }
+  .soviet-theme .card .source {
+    color: #4a4a4a;
+    background: #f0f0f0;
+    padding: 4px 6px;
+    margin-left: -4px;
+    margin-right: -4px;
+  }
+
+  /* ============================================================
+     ПЕРИОД 5: НОВЕЙШЕЕ ВРЕМЯ — СТЕКЛО, СТАЛЬ, ТРИКОЛОР
+     ============================================================ */
+  .modern-theme {
+    background:
+      linear-gradient(180deg, #F0F4F8 0%, #E2E8F0 100%),
+      radial-gradient(ellipse at 20% 20%, rgba(0, 51, 160, 0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(218, 41, 28, 0.04) 0%, transparent 60%);
+    color: #1A202C;
+    border-top: 8px solid;
+    border-image: linear-gradient(90deg,
+      #FFFFFF 0% 33.3%,
+      #0033A0 33.3% 66.6%,
+      #DA291C 66.6% 100%
+    ) 1;
+  }
+  /* Tricolor diagonal accent */
+  .modern-theme::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 160px; height: 160px;
+    background:
+      linear-gradient(180deg,
+        #FFFFFF 0% 33.3%,
+        #0033A0 33.3% 66.6%,
+        #DA291C 66.6% 100%
+      );
+    clip-path: polygon(100% 0, 100% 100%, 0 0);
+    opacity: 0.65;
+    z-index: 1;
+  }
+  /* Subtle grid */
+  .modern-theme::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(0deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .modern-theme .period-header .num {
+    color: #0033A0;
+    font-weight: 700;
+    letter-spacing: 6px;
+  }
+  .modern-theme .period-header h2 {
+    color: #1A202C;
+    font-family: 'DejaVu Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+  }
+  .modern-theme .period-header h2 .accent {
+    background: linear-gradient(90deg, #0033A0 0%, #DA291C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .modern-theme .period-header .span { color: #4A5568; font-weight: 600; }
+  .modern-theme .period-header .intro { color: #2D3748; }
+  .modern-theme .card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.05),
+      0 8px 24px rgba(0,0,0,0.08);
+    border-radius: 8px;
+    color: #1A202C;
+    border-top: 3px solid #0033A0;
+  }
+  .modern-theme .card:nth-child(even) { border-top-color: #DA291C; }
+  .modern-theme .card h3 {
+    color: #1A202C;
+    font-family: 'DejaVu Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .modern-theme .card .body { color: #2D3748; }
+  .modern-theme .card .date {
+    color: #0033A0;
+    font-weight: 700;
+    font-style: normal;
+  }
+  .modern-theme .card .source { color: #4A5568; }
+
+  /* ===== ИЗОБРАЖЕНИЯ В КАРТОЧКАХ ===== */
+  .card .pic {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 2px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .scroll-theme .pic { filter: sepia(0.25) saturate(0.85); border: 1px solid #8B4513; }
+  .wood-theme .pic { filter: sepia(0.12) saturate(0.95); border: 2px solid #3d2415; }
+  .imperial-theme .pic { border: 1px solid #C9A961; }
+  .soviet-theme .pic { filter: contrast(1.05); border: 2px solid #000; border-radius: 0; }
+  .modern-theme .pic { border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+
+  /* ===== КАРТА В ШАПКЕ ПЕРИОДА ===== */
+  .period-map {
+    width: 100%;
+    max-height: 110px;
+    object-fit: cover;
+    object-position: center;
+    margin: 12px 0 4px;
+    border-radius: 2px;
+    display: block;
+  }
+  .imperial-theme .period-map { border: 1px solid #C9A961; }
+  .soviet-theme .period-map { filter: contrast(1.05); border: 2px solid #000; border-radius: 0; }
+
+  /* ===== ФУТЕР ===== */
+  .footer {
+    background: #0d0d0d;
+    color: #888;
+    padding: 24px 80px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-style: italic;
+    border-top: 3px solid #C9A961;
+  }
+  .footer .gold { color: #C9A961; }
+</style>
+</head>
+<body>
+
+<!-- ============ ШАПКА ============ -->
+<div class="title-section">
+  <div>
+    <h1>Таймлайн <span class="gold">истории</span> России</h1>
+    <div class="sub">События · Личности · Явления · Идеи &nbsp;—&nbsp; от Древней Руси до наших дней</div>
+  </div>
+  <div class="meta">
+    Финальный проект &nbsp;·&nbsp; Май 2026<br>
+    <span class="gold">31 элемент</span> · 5 периодов · хронология
+    <div class="legend">
+      <div class="legend-item"><span class="legend-swatch type-event"></span>Событие</div>
+      <div class="legend-item"><span class="legend-swatch type-person"></span>Личность</div>
+      <div class="legend-item"><span class="legend-swatch type-phenom"></span>Явление</div>
+      <div class="legend-item"><span class="legend-swatch type-idea"></span>Идея</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ СЕТКА ПЕРИОДОВ ============ -->
+<div class="periods-row">
+
+  <!-- ============================================================
+       ПЕРИОД 1: ДРЕВНЯЯ РУСЬ
+       ============================================================ -->
+  <div class="period scroll-theme">
+    <div class="period-header">
+      <div class="num">Свиток первый</div>
+      <h2>Древняя Русь</h2>
+      <div class="span">IX – XV вв. &nbsp;(862 – 1480)</div>
+      <div class="ornament"></div>
+      <div class="intro">От призвания варягов до Стояния на Угре. Складывается восточнославянская православная цивилизация, отличная от католического Запада и от исламского и тюркского мира степи.</div>
+    </div>
+    <div class="cards-row">
+
+      <div class="card">
+        <img class="pic" src="pics/Варяги(Васнецов).jpg" alt="Призвание варягов, В.М. Васнецов">
+        <div class="head"><span class="type-tag type-event">Событие</span><span class="date">862 год</span></div>
+        <h3>Призвание варягов</h3>
+        <p class="body">По «Повести временных лет», в 862 году новгородские словене, кривичи и финно-угорские племена пригласили варяжского князя Рюрика с дружиной править ими. С Рюрика началась династия, правившая до конца XVI века. Историческая достоверность спорна — это легендарная дата, ставшая основой норманнской теории происхождения русской государственности. 862 год считается условной точкой отсчёта истории русского государства.</p>
+        <div class="source">Повесть временных лет · БРЭ</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/Vasnetsov_Bapt_Vladimir_fresco_in_Kiev.jpg" alt="Крещение Руси, фреска В.М. Васнецова">
+        <div class="head"><span class="type-tag type-event">Событие</span><span class="date">988 год</span></div>
+        <h3>Крещение Руси</h3>
+        <p class="body">Князь Владимир Святославич принял христианство византийского обряда и сделал его государственной религией. По летописи, выбору предшествовало «испытание вер». Массовое крещение в Днепре стало символом цивилизационного выбора в пользу Византии. Появилась славянская письменность, хроникальная традиция, каменная архитектура; Русь вошла в орбиту христианской Европы. Крещение определило восточнославянскую идентичность на тысячу лет.</p>
+        <div class="source">Arzamas: «Крещение Руси»</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/ЯрочлавМудрыйБюст.jpg" alt="Реконструкция облика Ярослава Мудрого М.М. Герасимова">
+        <div class="head"><span class="type-tag type-person">Личность</span><span class="date">1019 – 1054</span></div>
+        <h3>Ярослав Мудрый и «Русская Правда»</h3>
+        <p class="body">Великий князь киевский, при котором Древнерусское государство достигло расцвета. Заключал династические браки с европейскими дворами — его дочери стали королевами Франции, Венгрии и Норвегии. Построил Софийский собор в Киеве. Главное наследие — «Русская Правда», первый письменный свод законов Руси: заменил кровную месть штрафами (вирами). Свидетельство перехода от родового общества к государственно-правовому.</p>
+        <div class="source">БРЭ: bigenc.ru</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/map_udelnie_russkie_knazestva_XII.jpg" alt="Карта удельных русских княжеств XII в.">
+        <div class="head"><span class="type-tag type-phenom">Явление</span><span class="date">XII – XIII вв.</span></div>
+        <h3>Феодальная раздробленность</h3>
+        <p class="body">После смерти Ярослава Русь распалась на удельные княжества. Любечский съезд 1097 года закрепил принцип «каждый держит отчину свою». К XII веку существовало более десятка независимых княжеств. Двойственное явление: развитие местных центров культуры, но ослабление обороноспособности, сделавшее Русь уязвимой перед монгольским нашествием. Типично средневековое явление, схожее с дроблением Каролингской империи.</p>
+        <div class="source">Б. А. Рыбаков. Киевская Русь</div>
+      </div>
+
+      <div class="card">
+        <div class="head"><span class="type-tag type-phenom">Явление</span><span class="date">1237 – 1480</span></div>
+        <h3>Монголо-татарское иго</h3>
+        <p class="body">Система политической и даннической зависимости русских княжеств от Золотой Орды, установленная после нашествия Батыя 1237–1240 годов. Князья получали «ярлык» от хана, платили «выход», участвовали в ордынских походах. Длилось около 240 лет. Оценки разнятся: одни видят в иге причину отставания от Европы; другие подчёркивают элементы культурного синтеза. В любом случае — ключевой фактор пути развития Руси.</p>
+        <div class="source">Arzamas: «Что такое Золотая Орда»</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/Angelsatmamre-trinity-rublev-1410-700x872.jpg" alt="«Троица», Андрей Рублёв, ок. 1410">
+        <div class="head"><span class="type-tag type-idea">Идея</span><span class="date">с 988 г.</span></div>
+        <h3>Православная цивилизационная идентичность</h3>
+        <p class="body">С крещения 988 года православие стало для Руси не просто религией, но цивилизационным выбором — в пользу Византии и против латинского Запада. Принцип «симфонии властей» определял отношения князей и церкви. После падения Константинополя эта идея трансформировалась в концепцию «Третьего Рима». Православие сформировало этику, искусство, календарь и язык русской культуры до сегодняшнего дня.</p>
+        <div class="source">Г. Флоровский. Пути русского богословия</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ПЕРИОД 2: МОСКОВСКОЕ ГОСУДАРСТВО
+       ============================================================ -->
+  <div class="period wood-theme">
+    <div class="period-header">
+      <div class="num">Палаты вторые</div>
+      <h2>Московское государство</h2>
+      <div class="span">1480 – 1721</div>
+      <div class="intro">От свержения ордынского ига до провозглашения империи. Москва превращается в столицу единого централизованного государства, а затем — в царство. Складываются ключевые черты будущей государственности: самодержавие, идеология «Третьего Рима», крепостное право.</div>
+    </div>
+    <div class="cards-row">
+
+      <div class="card">
+        <img class="pic" src="pics/ГербИвана3.jpg" alt="Герб (печать) Ивана III с двуглавым орлом">
+        <div class="head"><span class="type-tag type-person">Личность</span><span class="date">1462 – 1505</span></div>
+        <h3>Иван III Великий</h3>
+        <p class="body">Великий князь, при котором завершилось объединение русских земель вокруг Москвы (Новгород 1478, Тверь 1485) и было свергнуто ордынское иго (1480). Принял титул «государя всея Руси», женился на Софье Палеолог, перенеся в Москву византийскую символику (двуглавый орёл). Построил Московский Кремль, принял Судебник 1497 года. Многие историки именно его, а не Петра I, считают истинным «собирателем» русских земель.</p>
+        <div class="source">БРЭ: bigenc.ru/c/ivan-iii</div>
+      </div>
+
+      <div class="card">
+        <div class="head"><span class="type-tag type-event">Событие</span><span class="date">осень 1480</span></div>
+        <h3>Стояние на Угре</h3>
+        <p class="body">Войска Ивана III и хана Ахмата несколько недель стояли друг против друга на реке Угре. Ахмат не решился перейти реку под огнём русской артиллерии, ждал помощи польского короля Казимира IV, которая не пришла, и в ноябре отступил. Битвы не было, но «стояние» завершило 240-летнюю зависимость от Орды. 1480 год — отправная точка существования полностью независимого Московского государства.</p>
+        <div class="source">Arzamas: «Как пало ордынское иго»</div>
+      </div>
+
+      <div class="card">
+        <div class="head"><span class="type-tag type-idea">Идея</span><span class="date">ок. 1510-х</span></div>
+        <h3>«Москва — Третий Рим»</h3>
+        <p class="body">Концепцию сформулировал псковский старец Филофей в посланиях Василию III: «Два Рима пали, третий стоит, а четвёртому не быть». После падения Рима (476) и Константинополя (1453) Москва — последний хранитель православия. Концепция дала идеологическое обоснование принятия Иваном IV царского титула (1547) и учреждения Московского патриархата (1589). Шаблон мессианского самовосприятия прослеживается до сегодняшнего дня.</p>
+        <div class="source">Н. В. Синицына. Третий Рим</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/ivan4.jpg" alt="Парсуна царя Ивана IV Грозного">
+        <div class="head"><span class="type-tag type-phenom">Явление</span><span class="date">1565 – 1572</span></div>
+        <h3>Опричнина Ивана Грозного</h3>
+        <p class="body">Система управления Ивана IV, разделившая страну на «опричнину» (личный удел царя с особым войском) и «земщину». Опричное войско носило чёрную форму, к сёдлам прикрепляли собачьи головы и мётлы — символы «выгрызания и выметания» измены. Цель — борьба с боярской «изменой». Результат: массовые казни, разорение Новгорода (1570), экономический упадок. Первый прецедент массового государственного террора против собственного населения.</p>
+        <div class="source">Р. Г. Скрынников. Иван Грозный</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/СкоттиМининИПожарский.jpg" alt="«Минин и Пожарский», М.И. Скотти">
+        <div class="head"><span class="type-tag type-event">Событие</span><span class="date">1598 – 1613</span></div>
+        <h3>Смутное время</h3>
+        <p class="body">Системный кризис после пресечения династии Рюриковичей. Включал династический кризис, гражданскую войну, голод 1601–1603 годов, самозванцев (Лжедмитрии I и II), польскую и шведскую интервенцию, оккупацию Москвы поляками (1610–1612). Освобождение Москвы Вторым ополчением Минина и Пожарского (октябрь 1612) и избрание Земским собором Михаила Романова (1613) положили начало 300-летней династии Романовых.</p>
+        <div class="source">В. О. Ключевский. Курс русской истории</div>
+      </div>
+
+      <div class="card">
+        <div class="head"><span class="type-tag type-phenom">Явление</span><span class="date">кон. XV в. – 1649</span></div>
+        <h3>Закрепощение крестьян</h3>
+        <p class="body">Юридическое закрепление крестьян за землёй, развивавшееся с конца XV века (Судебник 1497 — ограничение Юрьевым днём) и завершившееся Соборным уложением 1649 года при Алексее Михайловиче. Уложение установило бессрочный сыск беглых — фактическое утверждение крепостного права. Цель — обеспечить служилое дворянство рабочей силой. Источник социальной отсталости, восстаний (Разин, Пугачёв) и революционных настроений.</p>
+        <div class="source">Соборное уложение 1649 г.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ПЕРИОД 3: РОССИЙСКАЯ ИМПЕРИЯ
+       ============================================================ -->
+  <div class="period imperial-theme">
+    <div class="period-header">
+      <div class="num">Книга третья</div>
+      <h2>Российская империя</h2>
+      <div class="span">1721 – 1917</div>
+      <div class="intro">От провозглашения империи Петром I до Февральской революции. Россия становится одной из великих европейских держав. Внутри страны — мучительный поиск пути модернизации: реформы Петра, просвещённый абсолютизм, Великие реформы Александра II, спор о цивилизационном выборе.</div>
+      <img class="period-map" src="pics/Карта_России_по_губерниям_и_областям_(1914).jpg" alt="Карта Российской империи по губерниям и областям, 1914 г.">
+    </div>
+    <div class="cards-row">
+
+      <div class="card">
+        <img class="pic" src="pics/petr1_nikitina.jpg" alt="Портрет Петра I, И.Н. Никитин">
+        <div class="head"><span class="type-tag type-person">Личность</span><span class="date">1689 – 1725</span></div>
+        <h3>Пётр I и его реформы</h3>
+        <p class="body">Первый император Всероссийский. Цель — модернизация России по западному образцу. Реформировал армию, создал флот, ввёл подушную подать, Табель о рангах, Сенат, коллегии. Основал Санкт-Петербург (1703). Цена реформ — массовая мобилизация, гибель десятков тысяч на стройке Петербурга, восстания, культурный раскол на «европейскую» элиту и «русское» крестьянство. Получил империю европейского уровня ценой колоссального напряжения нации.</p>
+        <div class="source">Е. В. Анисимов. Время петровских реформ</div>
+      </div>
+
+      <div class="card">
+        <div class="head"><span class="type-tag type-event">Событие</span><span class="date">27 июня 1709</span></div>
+        <h3>Полтавская битва</h3>
+        <p class="body">Решающее сражение Северной войны между Россией и Швецией. Армия Карла XII, считавшаяся непобедимой и разгромившая Россию под Нарвой (1700), была разгромлена под Полтавой. Швеция утратила статус великой державы, Россия стала ведущей силой на Балтике. Ништадтский мир (1721) закрепил за Россией Прибалтику, Пётр I принял титул «Императора Всероссийского». Один из главных военных триумфов русской истории.</p>
+        <div class="source">История внешней политики России XVIII в.</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/ekaterina2-1763-rokotov+.jpg" alt="Портрет Екатерины II, Ф.С. Рокотов, 1763">
+        <div class="head"><span class="type-tag type-idea">Идея</span><span class="date">1762 – 1796</span></div>
+        <h3>Просвещённый абсолютизм Екатерины II</h3>
+        <p class="body">Сочетание идей Просвещения с сохранением абсолютной власти. Екатерина переписывалась с Вольтером и Дидро, написала «Наказ» с цитатами из Монтескьё, провела губернскую реформу и секуляризацию. На словах — идеалы законности; на деле — расширение крепостного права, разделы Польши, подавление Пугачёва. Противоречие между декларируемыми идеалами и реальностью модернизации «сверху» в крепостной стране.</p>
+        <div class="source">А. Б. Каменский. От Петра I до Павла I</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/Kutuzov_fili.jpg" alt="«Военный совет в Филях», А.Д. Кившенко">
+        <div class="head"><span class="type-tag type-event">Событие</span><span class="date">1812</span></div>
+        <h3>Отечественная война 1812</h3>
+        <p class="body">«Великая армия» Наполеона (более 600 000 человек) вторглась в Россию. Армия Кутузова отступала, заманивая противника вглубь. Бородинское сражение (26 августа) не дало решающего результата. После оставления Москвы и её пожара армия Наполеона была уничтожена холодом, голодом и партизанами. Война стала народной и моментом небывалого национального подъёма, вдохновила декабристов и роман «Война и мир». Россия стала «жандармом Европы».</p>
+        <div class="source">Е. В. Тарле. Нашествие Наполеона на Россию</div>
+      </div>
+
+      <div class="card">
+        <div class="head"><span class="type-tag type-event">Событие</span><span class="date">19 февраля 1861</span></div>
+        <h3>Отмена крепостного права</h3>
+        <p class="body">Манифест Александра II освободил около 23 млн помещичьих крестьян от личной зависимости. Последовал за поражением в Крымской войне, показавшим отсталость крепостной России. Реформа половинчатая: личная свобода, но землю надо выкупать (платежи отменили только в 1907). Открыла дорогу остальным «Великим реформам». Неполнота реформы породила «аграрный вопрос», ставший причиной революций 1905 и 1917 годов.</p>
+        <div class="source">Л. Г. Захарова. Александр II</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/запалники_славянофилы.jpg" alt="Западники и славянофилы">
+        <div class="head"><span class="type-tag type-phenom">Явление</span><span class="date">1830-е – 1840-е</span></div>
+        <h3>Западники и славянофилы</h3>
+        <p class="body">Два направления русской общественной мысли. Западники (Грановский, Кавелин, Белинский) — Россия часть Европы, путь её — догоняющая модернизация по западному образцу. Славянофилы (Хомяков, Киреевский, Аксаковы) — у России собственный путь, опирающийся на православие, общину и «соборность». Спор о цивилизационном выборе продолжается до сегодняшнего дня в формах «либералы vs. почвенники» и «западники vs. евразийцы».</p>
+        <div class="source">А. Валицкий. В кругу консервативной утопии</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ПЕРИОД 4: СОВЕТСКИЙ ПЕРИОД
+       ============================================================ -->
+  <div class="period soviet-theme">
+    <div class="period-header">
+      <div class="num">Том четвёртый</div>
+      <h2>Советский период</h2>
+      <div class="span">1917 – 1991</div>
+      <div class="intro">От Октябрьской революции до распада СССР. 74 года, в течение которых на месте Российской империи существовало первое в мире социалистическое государство. Включает Гражданскую войну, сталинскую модернизацию, ВОВ, статус сверхдержавы, космические достижения и попытку реформ Горбачёва.</div>
+      <img class="period-map" src="pics/karta-sssr.jpg" alt="Карта СССР с 15 союзными республиками">
+    </div>
+    <div class="cards-row">
+
+      <div class="card">
+        <img class="pic" src="pics/october_rev2_штурм_зимнего.jpg" alt="Штурм Зимнего дворца">
+        <div class="head"><span class="type-tag type-event">Событие</span><span class="date">25 окт. 1917</span></div>
+        <h3>Октябрьская революция</h3>
+        <p class="body">Вооружённое восстание большевиков в Петрограде, свергнувшее Временное правительство. Спланировано Военно-революционным комитетом во главе с Троцким, идейно — Лениным. Штурм Зимнего, передача власти II съезду Советов. Декреты о мире и о земле. Цель — построение социализма; результат — первое в мире социалистическое государство, 5-летняя гражданская война (1918–1922) и эмиграция миллионов. Переломный момент XX века.</p>
+        <div class="source">Р. Пайпс. Русская революция</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/ленинБроневик.jpg" alt="Ленин на броневике у Финляндского вокзала">
+        <div class="head"><span class="type-tag type-person">Личность</span><span class="date">1870 – 1924</span></div>
+        <h3>В. И. Ленин</h3>
+        <p class="body">Создатель партии большевиков, идеолог и организатор Октябрьской революции, основатель Советского государства. Разработал концепцию партии «нового типа». После 1917 — глава Совнаркома: «военный коммунизм» (1918–1921), затем НЭП (1921). Подписал Брестский мир, утвердил создание СССР (1922). Хотел общество без эксплуатации; получил государство, ставшее тоталитарным при Сталине. Глобальное влияние на XX век.</p>
+        <div class="source">Д. А. Волкогонов. Ленин</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/Краткий_курс_истории_ВКП(б)_(издание_1946_года).jpg" alt="«Краткий курс истории ВКП(б)», издание 1946 г.">
+        <div class="head"><span class="type-tag type-idea">Идея</span><span class="date">1917 – 1991</span></div>
+        <h3>Марксизм-ленинизм как государственная идеология</h3>
+        <p class="body">Официальная идеология СССР: соединение марксистской теории классовой борьбы с ленинской концепцией пролетарской революции и партии-авангарда. Закреплена в Программе ВКП(б)/КПСС и советских конституциях, обязательно преподавалась во всех вузах в курсах истмата, диамата и научного коммунизма. Декларировала построение бесклассового коммунистического общества. На практике обосновывала монополию КПСС, плановую экономику и подавление инакомыслия как «буржуазной идеологии». Идея «реального социализма» и неизбежной победы над капитализмом определяла внутреннюю и внешнюю политику СССР на протяжении 74 лет, особенно в эпоху Холодной войны.</p>
+        <div class="source">К. Маркс, В. И. Ленин · Программа КПСС</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/спасибоСталину.jpg" alt="Плакат «Спасибо товарищу Сталину за наше счастливое детство»">
+        <div class="head"><span class="type-tag type-phenom">Явление</span><span class="date">1928 – 1953</span></div>
+        <h3>Сталинизм</h3>
+        <p class="body">Тоталитарная система и форсированная модернизация. Индустриализация (пятилетки) — тысячи заводов, металлургия. Коллективизация (1929–33) — насильственное объединение крестьян в колхозы — привела к голоду 1932–33 годов с миллионами жертв. «Большой террор» 1937–38: ~700 тыс. расстреляны, миллионы — через ГУЛАГ. Цель — «социализм в одной стране»; результат — победа в ВОВ, сверхдержава, но колоссальные жертвы.</p>
+        <div class="source">О. В. Хлевнюк. Сталин</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/znamapobedy.jpg" alt="Знамя Победы над Рейхстагом, Е. Халдей, 1945">
+        <div class="head"><span class="type-tag type-event">Событие</span><span class="date">1941 – 1945</span></div>
+        <h3>Великая Отечественная война</h3>
+        <p class="body">Война СССР против нацистской Германии. Началась 22 июня 1941 года внезапным нападением. После катастроф 1941–42 — переломные победы: Москва (1941), Сталинград (1942–43), Курск (1943). В мае 1945 Красная армия взяла Берлин. Цена: ~27 млн погибших советских граждан. Центральное событие советской исторической памяти и ключевой элемент российской идентичности до сегодняшнего дня. Основа международного авторитета СССР.</p>
+        <div class="source">Великая Отечественная война, в 12 т.</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/гагарин.jpg" alt="Юрий Гагарин в шлеме «СССР», 12 апреля 1961">
+        <div class="head"><span class="type-tag type-event">Событие</span><span class="date">12 апреля 1961</span></div>
+        <h3>Полёт Юрия Гагарина</h3>
+        <p class="body">Первый в истории человечества пилотируемый космический полёт. На корабле «Восток-1» Гагарин совершил виток вокруг Земли за 108 минут. Кульминация советской космической программы (Спутник-1 в 1957) и крупнейшая пропагандистская победа в Холодной войне. Превосходство удерживалось до американской высадки на Луну (1969). Одно из немногих событий XX века с однозначно позитивной оценкой в любых политических координатах.</p>
+        <div class="source">Я. К. Голованов. Королёв</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/Горбачёв4.jpg" alt="М.С. Горбачёв">
+        <div class="head"><span class="type-tag type-phenom">Явление</span><span class="date">1985 – 1991</span></div>
+        <h3>Перестройка</h3>
+        <p class="body">Реформы М. С. Горбачёва: «ускорение», «гласность», «новое мышление». Цель — модернизировать социализм. Результат разошёлся с целями: гласность открыла обсуждение преступлений сталинизма; экономические реформы не помогли (дефицит, талоны); политическая либерализация привела к параду суверенитетов. Августовский путч ГКЧП и Беловежские соглашения — конец СССР. Пример того, как попытка реформ привела не к обновлению, а к крушению системы.</p>
+        <div class="source">А. С. Черняев. Шесть лет с Горбачёвым</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ПЕРИОД 5: НОВЕЙШЕЕ ВРЕМЯ
+       ============================================================ -->
+  <div class="period modern-theme">
+    <div class="period-header">
+      <div class="num">Файл пятый · 1991 / 2026</div>
+      <h2>Новейшее <span class="accent">время</span></h2>
+      <div class="span">1991 – н. в.</div>
+      <div class="intro">Период существования Российской Федерации как независимого государства. Болезненный переход от плановой экономики к рыночной, формирование новых институтов, две чеченские войны, экономический рост 2000-х, конфликт с Западом и постсоветскими соседями. Изложение придерживается принципа «декларируемые цели → реализация → последствия».</div>
+    </div>
+    <div class="cards-row">
+
+      <div class="card">
+        <div class="head"><span class="type-tag type-event">Событие</span><span class="date">декабрь 1991</span></div>
+        <h3>Распад СССР</h3>
+        <p class="body">8 декабря 1991 лидеры России (Ельцин), Украины (Кравчук) и Беларуси (Шушкевич) подписали в Беловежской Пуще соглашение о роспуске СССР. 25 декабря Горбачёв ушёл в отставку, над Кремлём спущен советский флаг. На месте СССР возникло 15 независимых государств. Распад без масштабной войны, но повлёк миллионы перемещённых лиц, серию региональных конфликтов и глубокую экономическую депрессию 1990-х.</p>
+        <div class="source">Левада-Центр</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/eltsin%20on%20tank.jpeg" alt="Б.Н. Ельцин на танке у Белого дома, август 1991">
+        <div class="head"><span class="type-tag type-person">Личность</span><span class="date">1991 – 1999</span></div>
+        <h3>Борис Ельцин</h3>
+        <p class="body">Первый президент РФ. Бывший член Политбюро, опала при Горбачёве сделала его символом оппозиции «номенклатуре». В августе 1991 выступил против ГКЧП, в декабре подписал Беловежские соглашения. Возглавил радикальные реформы 1992 года. В октябре 1993 разрешил политический кризис расстрелом Верховного Совета. Начал Первую чеченскую войну (1994–96). В декабре 1999 досрочно ушёл в отставку, передав власть Путину.</p>
+        <div class="source">Т. Колтон. Ельцин. Жизнь</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/чубайс.jpg" alt="А.Б. Чубайс с приватизационным ваучером">
+        <div class="head"><span class="type-tag type-phenom">Явление</span><span class="date">1992 – 1996</span></div>
+        <h3>«Шоковая терапия» и приватизация</h3>
+        <p class="body">Радикальные реформы Гайдара–Чубайса: либерализация цен (январь 1992), ваучерная приватизация (1992–94), залоговые аукционы (1995–96). Цель — переход к рыночной экономике. Результаты двойственны: частная собственность, рыночные институты — но гиперинфляция (~2500%), обесценивание сбережений, падение ВВП на 40% к 1998, дефолт, формирование «олигархов», рост бедности. «Лихие 90-е» — обоснование консервативного поворота 2000-х.</p>
+        <div class="source">Е. Т. Гайдар. Гибель империи</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/путин.jpg" alt="В.В. Путин">
+        <div class="head"><span class="type-tag type-person">Личность</span><span class="date">1999 – н. в.</span></div>
+        <h3>Владимир Путин</h3>
+        <p class="body">Второй и четвёртый президент РФ. Бывший офицер КГБ, директор ФСБ. Пришёл к власти на фоне Второй чеченской войны и роста цен на нефть. Первый период (2000-е): «стабилизация», ослабление олигархов, рост доходов. Второй период (с 2012): консервативный поворот, конфликт с Западом, Крым (2014), Сирия, СВО в Украине с 2022. Конституционные поправки 2020 обнулили его сроки. Определяющая фигура российской политики последней четверти века.</p>
+        <div class="source">Hill, Gaddy. Mr. Putin</div>
+      </div>
+
+      <div class="card">
+        <div class="head"><span class="type-tag type-idea">Идея</span><span class="date">2000-е</span></div>
+        <h3>«Суверенная демократия»</h3>
+        <p class="body">Концепция, сформулированная в 2006 году Владиславом Сурковым: Россия — демократия, но её формы определяются самой Россией, а не Западом; суверенитет важнее заимствованных извне процедур. Ответ на «цветные революции» 2003–2005. Параллельно — идеи «русского мира» и «многополярного мира». Определила внутреннюю политику (ограничение НКО как «иностранных агентов») и внешнюю (Грузия 2008, Крым 2014, СВО 2022).</p>
+        <div class="source">В. Сурков (2006)</div>
+      </div>
+
+      <div class="card">
+        <img class="pic" src="pics/конфликт%20линия%20фронта.png" alt="Линия фронта российско-украинского конфликта">
+        <div class="head"><span class="type-tag type-event">Событие</span><span class="date">2014, 2022 →</span></div>
+        <h3>Российско-украинский конфликт</h3>
+        <p class="body">В феврале–марте 2014, после смены власти в Киеве в результате Евромайдана, Россия присоединила Крым (большинством стран мира признано аннексией). С весны 2014 — конфликт на востоке Украины. 24 февраля 2022 — «специальная военная операция»: полномасштабное вторжение. Заявленные цели Москвы — «демилитаризация», защита русскоязычных, предотвращение расширения НАТО. К 2026 РФ контролирует ~1/5 территории Украины, сотни тысяч жертв с обеих сторон. Май 2026 — переговоры при США, мира пока нет.</p>
+        <div class="source">Al Jazeera, май 2026</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ ФУТЕР ============ -->
+<div class="footer">
+  <div>Таймлайн истории России &nbsp;·&nbsp; финальный проект <span class="gold">·</span> 31 элемент в хронологии</div>
+  <div>Май 2026 &nbsp;·&nbsp; <span class="gold">из пяти эпох — пять стилей</span></div>
+</div>
+
+</body>
+</html>
