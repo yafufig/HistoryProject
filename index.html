@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Таймлайн истории России</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23FAF5E6'/><line x1='6' y1='6' x2='6' y2='26' stroke='%231A1A1A' stroke-width='2.5' stroke-linecap='round'/><circle cx='6' cy='9' r='2.2' fill='%23B07A2B'/><circle cx='6' cy='15' r='2.2' fill='%237B2D26'/><circle cx='6' cy='19' r='2.2' fill='%23C9A961'/><circle cx='6' cy='23' r='2.2' fill='%23A91818'/><circle cx='6' cy='27' r='2.2' fill='%230B5BB0'/></svg>">
 
 <meta property="og:title" content="Таймлайн истории России">
-<meta property="og:description" content="От Древней Руси до наших дней — пять периодов, 31 элемент: события, личности, явления и идеи.">
+<meta property="og:description" content="От Древней Руси до наших дней — пять периодов, 34 элемента: события, личности, явления и идеи.">
 <meta property="og:type" content="website">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -87,6 +88,132 @@ h1, h2, h3, h4, p { margin: 0; }
 }
 .nav-chips a:hover { color: #1A1A1A; background: #f0f0f0; }
 .nav-chips a.active { color: #fff; background: #1A1A1A; }
+
+/* Year progress bar */
+.year-bar {
+  position: relative;
+  width: 100%;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #ebebeb;
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.02));
+  padding: 0 24px;
+  font: 11px/1 'Inter', system-ui, sans-serif;
+  color: #8a8a8a;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  gap: 12px;
+}
+.year-bar-track {
+  position: relative;
+  flex: 1;
+  height: 3px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.year-bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background: linear-gradient(90deg, #B07A2B 0%, #7B2D26 20%, #C9A961 45%, #A91818 70%, #0B5BB0 100%);
+  transition: width 0.35s ease;
+  border-radius: 99px;
+}
+.year-bar-tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0,0,0,0.15);
+}
+.year-bar-tick[data-pct="0"]   { left: 0; }
+.year-bar-tick[data-pct="50"]  { left: 50%; }
+.year-bar-tick[data-pct="100"] { left: 100%; }
+.year-bar-label {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: #444;
+}
+.year-bar[data-period="rus"] .year-bar-label { color: #8B4513; }
+.year-bar[data-period="msk"] .year-bar-label { color: #7B2D26; }
+.year-bar[data-period="imp"] .year-bar-label { color: #8B6914; }
+.year-bar[data-period="sov"] .year-bar-label { color: #A91818; }
+.year-bar[data-period="mod"] .year-bar-label { color: #0B5BB0; }
+.year-bar-edge { color: #aaa; font-size: 10px; font-variant-numeric: tabular-nums; }
+
+/* Print styles */
+@media print {
+  .site-header, .year-bar, #to-top, .period-frieze, .carousel-dots, .carousel-counter { display: none !important; }
+  body { background: #fff; color: #000; }
+  .hero, .hero h1 { color: #000; }
+  .hero-bg, .hero-overlay { display: none !important; }
+  .period-head { min-height: 0; padding: 30px 0 12px; border-top: 2px solid #000; page-break-before: always; }
+  .period-head h2 { color: #000 !important; text-shadow: none !important; font-size: 32px !important; }
+  .period-num, .period-years, .period-intro { color: #333 !important; text-shadow: none !important; background: none !important; }
+  .timeline::before, .timeline-inner::before, .card::before, .card::after { display: none !important; }
+  .timeline-inner { display: block; max-width: none; }
+  .card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    display: block;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 18px 0 !important;
+    transform: none !important;
+    background: #fff !important;
+    border: 1px solid #ccc;
+    box-shadow: none !important;
+    padding: 14px 18px !important;
+  }
+  .card-img { max-height: 280px; width: auto !important; max-width: 60% !important; float: right; margin: 0 0 8px 14px !important; border: 1px solid #999 !important; outline: none !important; filter: none !important; }
+  .card-media [class~="card-img"]:not(.active) { display: none; }
+  .card-meta { font-size: 11px; }
+  a[href]::after { content: " (" attr(href) ")"; font-size: 0.85em; color: #555; }
+  a[href^="#"]::after, a[href^="javascript"]::after { content: ""; }
+  .site-footer { background: none; color: #000; padding: 18px 0; }
+}
+
+/* Back-to-top floating button */
+#to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 90;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #1A1A1A;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 400;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity 0.25s, transform 0.25s, background 0.15s;
+}
+#to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+#to-top:hover {
+  background: #fff;
+  color: #000;
+  transform: translateY(-2px);
+}
+@media (max-width: 640px) {
+  #to-top { bottom: 14px; right: 14px; width: 40px; height: 40px; font-size: 18px; }
+}
 
 /* =========================================================
    HERO (top of page)
@@ -215,11 +342,24 @@ h1, h2, h3, h4, p { margin: 0; }
 }
 /* Period-specific overlay tweaks */
 .period[data-period="sov"] .hero-overlay {
-  background: linear-gradient(180deg,
-    rgba(0, 0, 0, 0.18) 0%,
-    rgba(169, 24, 24, 0.12) 35%,
-    rgba(255, 255, 255, 0.92) 100%
-  );
+  background:
+    radial-gradient(ellipse at center 32%, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.35) 35%, transparent 70%),
+    linear-gradient(180deg,
+      rgba(0, 0, 0, 0.55) 0%,
+      rgba(0, 0, 0, 0.45) 30%,
+      rgba(120, 12, 12, 0.40) 55%,
+      rgba(255, 255, 255, 0.95) 100%
+    );
+}
+.period[data-period="sov"] .period-head h2,
+.period[data-period="sov"] .period-num,
+.period[data-period="sov"] .period-years,
+.period[data-period="sov"] .period-intro {
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+}
+.period[data-period="sov"] .period-num {
+  color: #FFD27F;
 }
 .period[data-period="mod"] .hero-overlay {
   background: linear-gradient(180deg,
@@ -288,7 +428,7 @@ h1, h2, h3, h4, p { margin: 0; }
   font-size: 80px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #1A1A1A;
+  color: #fff;
 }
 .period[data-period="mod"] .period-head h2 {
   font-family: 'Space Grotesk', 'Inter', sans-serif;
@@ -304,7 +444,13 @@ h1, h2, h3, h4, p { margin: 0; }
   font-size: 22px;
   color: var(--accent);
   margin-top: 14px;
-  font-weight: 400;
+  font-weight: 600;
+  display: inline-block;
+  padding: 4px 14px;
+  background: rgba(var(--paper-rgb), 0.78);
+  border-radius: 99px;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
 .period[data-period="sov"] .period-years {
   font-family: 'Oswald', sans-serif;
@@ -324,6 +470,7 @@ h1, h2, h3, h4, p { margin: 0; }
   font-size: 17px;
   line-height: 1.6;
   color: #2a2a2a;
+  text-shadow: 0 1px 6px rgba(var(--paper-rgb), 0.6);
 }
 .period-map {
   display: block;
@@ -563,9 +710,77 @@ h1, h2, h3, h4, p { margin: 0; }
   width: 100%;
   aspect-ratio: 3 / 2;
   object-fit: cover;
+  object-position: var(--obj-pos, center 35%);
   border-radius: 4px;
   margin-bottom: 14px;
   background: #f0f0f0;
+}
+.card-img.portrait {
+  aspect-ratio: 3 / 4;
+  object-position: var(--obj-pos, center 18%);
+}
+.card-img.contain {
+  object-fit: contain;
+  background: var(--paper, #f5f0e2);
+}
+
+/* =========================================================
+   CARD CAROUSEL (for cards with multiple images)
+   ========================================================= */
+.card-media {
+  position: relative;
+  margin: 0 0 14px;
+  padding: 0;
+}
+.card-media .card-img {
+  display: block;
+  margin-bottom: 0;
+}
+.card-media .card-img:not(.active) {
+  display: none;
+}
+.carousel-dots {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  display: flex;
+  gap: 6px;
+  padding: 5px 9px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  border-radius: 99px;
+  z-index: 2;
+}
+.carousel-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.carousel-dots button:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.15);
+}
+.carousel-dots button[aria-current="true"] {
+  background: #fff;
+  transform: scale(1.15);
+}
+.carousel-counter {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  padding: 3px 9px;
+  font: 11px/1 'Inter', system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 99px;
+  z-index: 2;
+  pointer-events: none;
 }
 .period[data-period="rus"] .card-img {
   filter: sepia(0.18);
@@ -680,29 +895,6 @@ h1, h2, h3, h4, p { margin: 0; }
 .period[data-period="rus"] .card .body { color: #3a2410; }
 .period[data-period="msk"] .card .body { color: #2A1810; }
 .period[data-period="imp"] .card .body { color: #2D1F08; font-family: 'PT Serif', Georgia, serif; }
-
-.card .source {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid #eee;
-  font-size: 13px;
-  color: #888;
-  font-style: italic;
-}
-.period[data-period="rus"] .card .source { border-top-color: #C9A961; color: #6B3010; }
-.period[data-period="msk"] .card .source { border-top-color: #A0623C; color: #5C3317; }
-.period[data-period="imp"] .card .source { border-top-color: #B8943E; color: #6B5010; }
-.period[data-period="sov"] .card .source { border-top-color: #ddd; }
-.period[data-period="mod"] .card .source { border-top-color: rgba(11, 91, 176, 0.15); }
-
-.card .source a {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  font-style: normal;
-  font-weight: 500;
-}
-.card .source a:hover { text-decoration-thickness: 2px; }
 
 /* =========================================================
    FOOTER
@@ -899,7 +1091,7 @@ h1, h2, h3, h4, p { margin: 0; }
    ========================================================= */
 .period-frieze {
   position: relative;
-  height: 48px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -920,9 +1112,10 @@ h1, h2, h3, h4, p { margin: 0; }
   left: 0;
   right: 0;
   top: 50%;
-  height: 2px;
+  height: 3px;
   transform: translateY(-50%);
-  background: linear-gradient(to right, transparent 0%, var(--from) 25%, var(--to) 75%, transparent 100%);
+  background: linear-gradient(to right, transparent 0%, var(--from) 22%, var(--to) 78%, transparent 100%);
+  box-shadow: 0 0 8px 0 rgba(0,0,0,0.06);
 }
 .period-frieze[data-key="rus-msk"] {
   --paper-from: #F2E1B2;
@@ -951,13 +1144,21 @@ h1, h2, h3, h4, p { margin: 0; }
 .frieze-ornament {
   position: relative;
   z-index: 2;
-  display: inline-block;
-  padding: 4px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 28px;
   background: linear-gradient(to bottom, var(--paper-from) 50%, var(--paper-to) 50%);
   color: #5a4023;
   line-height: 0;
+  border-radius: 99px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.05);
 }
-.frieze-ornament svg { display: block; }
+.frieze-ornament svg { display: block; transform: scale(1.35); }
+.period-frieze[data-key="rus-msk"] .frieze-ornament { color: var(--from); }
+.period-frieze[data-key="msk-imp"] .frieze-ornament { color: var(--to); }
+.period-frieze[data-key="imp-sov"] .frieze-ornament { color: var(--to); }
+.period-frieze[data-key="sov-mod"] .frieze-ornament { color: var(--to); }
 
 /* =========================================================
    LIVE INDICATOR (on Konflikt card)
@@ -1037,6 +1238,9 @@ h1, h2, h3, h4, p { margin: 0; }
   .site-header-inner { padding: 10px 16px; gap: 8px; }
   .site-title { font-size: 14px; }
   .nav-chips a { padding: 5px 10px; font-size: 12px; }
+  .year-bar { padding: 0 14px; height: 24px; gap: 8px; }
+  .year-bar-label { font-size: 10px; }
+  .year-bar-edge { font-size: 9px; }
 
   .hero { padding: 56px 16px 48px; }
   .hero h1 { font-size: 38px; letter-spacing: -1px; }
@@ -1107,12 +1311,23 @@ h1, h2, h3, h4, p { margin: 0; }
       </ul>
     </nav>
   </div>
+  <div class="year-bar" id="year-bar">
+    <span class="year-bar-edge" aria-hidden="true">862</span>
+    <div class="year-bar-track" aria-hidden="true">
+      <span class="year-bar-tick" data-pct="0"></span>
+      <span class="year-bar-tick" data-pct="50"></span>
+      <span class="year-bar-tick" data-pct="100"></span>
+      <span class="year-bar-fill" id="year-progress-fill"></span>
+    </div>
+    <span class="year-bar-label" id="year-indicator" aria-live="polite" aria-atomic="true">862 – 2026</span>
+    <span class="year-bar-edge" aria-hidden="true">2026</span>
+  </div>
 </header>
 
 <!-- ============ HERO ============ -->
 <section class="hero">
   <h1>Таймлайн истории <em>России</em></h1>
-  <p class="subtitle">От призвания варягов до наших дней. Пять периодов, тридцать один элемент: события, личности, явления и идеи.</p>
+  <p class="subtitle">От призвания варягов до наших дней. Пять периодов, тридцать четыре элемента: события, личности, явления и идеи.</p>
   <div class="meta">Финальный проект · Май 2026</div>
   <ul class="legend">
     <li class="legend-item"><span class="legend-dot" style="background:#2E86C1"></span>Событие</li>
@@ -1146,68 +1361,63 @@ h1, h2, h3, h4, p { margin: 0; }
     <div class="timeline-inner">
 
       <article class="card left" id="varyagi">
-        <img class="card-img" src="pics/Варяги(Васнецов).jpg" loading="lazy" alt="«Призвание варягов», В.М. Васнецов">
+        <img class="card-img" src="pics/Варяги(Васнецов).jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-event">Событие</span>
           <time datetime="0862">862 год</time>
         </div>
         <h3>Призвание варягов</h3>
         <p class="body">По «Повести временных лет», в 862 году новгородские словене, кривичи и финно-угорские племена пригласили варяжского князя Рюрика с дружиной править ими. С Рюрика началась династия, правившая до конца XVI века. Историческая достоверность спорна — это легендарная дата, ставшая основой норманнской теории происхождения русской государственности. 862 год считается условной точкой отсчёта истории русского государства.</p>
-        <p class="source"><em>Повесть временных лет</em> · <a href="https://bigenc.ru/" target="_blank" rel="noopener">БРЭ</a></p>
       </article>
 
       <article class="card right" id="krescheniye">
-        <img class="card-img" src="pics/Vasnetsov_Bapt_Vladimir_fresco_in_Kiev.jpg" loading="lazy" alt="«Крещение Руси», фреска В.М. Васнецова">
+        <img class="card-img" src="pics/Vasnetsov_Bapt_Vladimir_fresco_in_Kiev.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-event">Событие</span>
           <time datetime="0988">988 год</time>
         </div>
         <h3>Крещение Руси</h3>
         <p class="body">Князь Владимир Святославич принял христианство византийского обряда и сделал его государственной религией. По летописи, выбору предшествовало «испытание вер». Массовое крещение в Днепре стало символом цивилизационного выбора в пользу Византии. Появилась славянская письменность, хроникальная традиция, каменная архитектура; Русь вошла в орбиту христианской Европы. Крещение определило восточнославянскую идентичность на тысячу лет.</p>
-        <p class="source"><a href="https://arzamas.academy/" target="_blank" rel="noopener">Arzamas</a>: «Крещение Руси»</p>
       </article>
 
       <article class="card left" id="yaroslav">
-        <img class="card-img" src="pics/ЯрочлавМудрыйБюст.jpg" loading="lazy" alt="Реконструкция облика Ярослава Мудрого М.М. Герасимова">
+        <img class="card-img portrait" src="pics/ЯрочлавМудрыйБюст.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-person">Личность</span>
           <time datetime="1019/1054">1019 – 1054</time>
         </div>
         <h3>Ярослав Мудрый и «Русская Правда»</h3>
         <p class="body">Великий князь киевский, при котором Древнерусское государство достигло расцвета. Заключал династические браки с европейскими дворами — его дочери стали королевами Франции, Венгрии и Норвегии. Построил Софийский собор в Киеве. Главное наследие — «Русская Правда», первый письменный свод законов Руси: заменил кровную месть штрафами (вирами). Свидетельство перехода от родового общества к государственно-правовому.</p>
-        <p class="source"><a href="https://bigenc.ru/" target="_blank" rel="noopener">БРЭ</a> · bigenc.ru</p>
       </article>
 
       <article class="card right" id="razdroblennost">
-        <img class="card-img" src="pics/map_udelnie_russkie_knazestva_XII.jpg" loading="lazy" alt="Карта удельных русских княжеств XII века">
+        <img class="card-img" src="pics/map_udelnie_russkie_knazestva_XII.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-phenom">Явление</span>
           <time datetime="1100/1240">XII – XIII вв.</time>
         </div>
         <h3>Феодальная раздробленность</h3>
         <p class="body">После смерти Ярослава Русь распалась на удельные княжества. Любечский съезд 1097 года закрепил принцип «каждый держит отчину свою». К XII веку существовало более десятка независимых княжеств. Двойственное явление: развитие местных центров культуры, но ослабление обороноспособности, сделавшее Русь уязвимой перед монгольским нашествием. Типично средневековое явление, схожее с дроблением Каролингской империи.</p>
-        <p class="source">Б. А. Рыбаков. <em>Киевская Русь</em></p>
       </article>
 
       <article class="card left" id="igo">
+        <img class="card-img portrait" src="pics/igo_suzdal_batu.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-phenom">Явление</span>
           <time datetime="1237/1480">1237 – 1480</time>
         </div>
         <h3>Монголо-татарское иго</h3>
         <p class="body">Система политической и даннической зависимости русских княжеств от Золотой Орды, установленная после нашествия Батыя 1237–1240 годов. Князья получали «ярлык» от хана, платили «выход», участвовали в ордынских походах. Длилось около 240 лет. Оценки разнятся: одни видят в иге причину отставания от Европы; другие подчёркивают элементы культурного синтеза. В любом случае — ключевой фактор пути развития Руси.</p>
-        <p class="source"><a href="https://arzamas.academy/" target="_blank" rel="noopener">Arzamas</a>: «Что такое Золотая Орда»</p>
       </article>
 
       <article class="card right" id="pravoslaviye">
-        <img class="card-img" src="pics/Angelsatmamre-trinity-rublev-1410-700x872.jpg" loading="lazy" alt="«Троица», Андрей Рублёв, около 1410">
+        <img class="card-img portrait" src="pics/Angelsatmamre-trinity-rublev-1410-700x872.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-idea">Идея</span>
           <time datetime="0988">с 988 г.</time>
         </div>
         <h3>Православная цивилизационная идентичность</h3>
         <p class="body">С крещения 988 года православие стало для Руси не просто религией, но цивилизационным выбором — в пользу Византии и против латинского Запада. Принцип «симфонии властей» определял отношения князей и церкви. После падения Константинополя эта идея трансформировалась в концепцию «Третьего Рима». Православие сформировало этику, искусство, календарь и язык русской культуры до сегодняшнего дня.</p>
-        <p class="source">Г. Флоровский. <em>Пути русского богословия</em></p>
       </article>
 
     </div>
@@ -1250,66 +1460,66 @@ h1, h2, h3, h4, p { margin: 0; }
     <div class="timeline-inner">
 
       <article class="card left" id="ivan3">
-        <img class="card-img" src="pics/ГербИвана3.jpg" loading="lazy" alt="Герб Ивана III с двуглавым орлом">
+        <img class="card-img portrait" src="pics/ivan3_titulyarnik.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-person">Личность</span>
           <time datetime="1462/1505">1462 – 1505</time>
         </div>
         <h3>Иван III Великий</h3>
         <p class="body">Великий князь, при котором завершилось объединение русских земель вокруг Москвы (Новгород 1478, Тверь 1485) и было свергнуто ордынское иго (1480). Принял титул «государя всея Руси», женился на Софье Палеолог, перенеся в Москву византийскую символику (двуглавый орёл). Построил Московский Кремль, принял Судебник 1497 года. Многие историки именно его, а не Петра I, считают истинным «собирателем» русских земель.</p>
-        <p class="source"><a href="https://bigenc.ru/" target="_blank" rel="noopener">БРЭ</a>: bigenc.ru/c/ivan-iii</p>
       </article>
 
       <article class="card right" id="ugra">
+        <img class="card-img portrait" src="pics/ugra_facial_chronicle.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-event">Событие</span>
           <time datetime="1480-11">осень 1480</time>
         </div>
         <h3>Стояние на Угре</h3>
         <p class="body">Войска Ивана III и хана Ахмата несколько недель стояли друг против друга на реке Угре. Ахмат не решился перейти реку под огнём русской артиллерии, ждал помощи польского короля Казимира IV, которая не пришла, и в ноябре отступил. Битвы не было, но «стояние» завершило 240-летнюю зависимость от Орды. 1480 год — отправная точка существования полностью независимого Московского государства.</p>
-        <p class="source"><a href="https://arzamas.academy/" target="_blank" rel="noopener">Arzamas</a>: «Как пало ордынское иго»</p>
       </article>
 
       <article class="card left" id="tretiy-rim">
+        <img class="card-img" src="pics/tretiy_rim_vasnetsov_kreml.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-idea">Идея</span>
           <time datetime="1510">ок. 1510-х</time>
         </div>
         <h3>«Москва — Третий Рим»</h3>
         <p class="body">Концепцию сформулировал псковский старец Филофей в посланиях Василию III: «Два Рима пали, третий стоит, а четвёртому не быть». После падения Рима (476) и Константинополя (1453) Москва — последний хранитель православия. Концепция дала идеологическое обоснование принятия Иваном IV царского титула (1547) и учреждения Московского патриархата (1589). Шаблон мессианского самовосприятия прослеживается до сегодняшнего дня.</p>
-        <p class="source">Н. В. Синицына. <em>Третий Рим</em></p>
       </article>
 
       <article class="card right" id="oprichnina">
-        <img class="card-img" src="pics/ivan4.jpg" loading="lazy" alt="Парсуна царя Ивана IV Грозного">
+        <figure class="card-media" data-carousel>
+          <img class="card-img portrait" src="pics/ivan4_vasnetsov.jpg" loading="lazy" alt="" style="--obj-pos: center 15%">
+          <img class="card-img portrait" src="pics/ОпричникГравюраПоМеталлуНаПодсвечнике.jpg" loading="lazy" alt="">
+        </figure>
         <div class="card-meta">
           <span class="tag tag-phenom">Явление</span>
           <time datetime="1565/1572">1565 – 1572</time>
         </div>
         <h3>Опричнина Ивана Грозного</h3>
         <p class="body">Система управления Ивана IV, разделившая страну на «опричнину» (личный удел царя с особым войском) и «земщину». Опричное войско носило чёрную форму, к сёдлам прикрепляли собачьи головы и мётлы — символы «выгрызания и выметания» измены. Цель — борьба с боярской «изменой». Результат: массовые казни, разорение Новгорода (1570), экономический упадок. Первый прецедент массового государственного террора против собственного населения.</p>
-        <p class="source">Р. Г. Скрынников. <em>Иван Грозный</em></p>
       </article>
 
       <article class="card left" id="smuta">
-        <img class="card-img" src="pics/СкоттиМининИПожарский.jpg" loading="lazy" alt="«Минин и Пожарский», М.И. Скотти">
+        <img class="card-img" src="pics/СкоттиМининИПожарский.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-event">Событие</span>
           <time datetime="1598/1613">1598 – 1613</time>
         </div>
         <h3>Смутное время</h3>
         <p class="body">Системный кризис после пресечения династии Рюриковичей. Включал династический кризис, гражданскую войну, голод 1601–1603 годов, самозванцев (Лжедмитрии I и II), польскую и шведскую интервенцию, оккупацию Москвы поляками (1610–1612). Освобождение Москвы Вторым ополчением Минина и Пожарского (октябрь 1612) и избрание Земским собором Михаила Романова (1613) положили начало 300-летней династии Романовых.</p>
-        <p class="source">В. О. Ключевский. <em>Курс русской истории</em></p>
       </article>
 
       <article class="card right" id="zakreposhcheniye">
+        <img class="card-img" src="pics/zakreposhcheniye_yuriev_den.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-phenom">Явление</span>
           <time datetime="1497/1649">кон. XV в. – 1649</time>
         </div>
         <h3>Закрепощение крестьян</h3>
         <p class="body">Юридическое закрепление крестьян за землёй, развивавшееся с конца XV века (Судебник 1497 — ограничение Юрьевым днём) и завершившееся Соборным уложением 1649 года при Алексее Михайловиче. Уложение установило бессрочный сыск беглых — фактическое утверждение крепостного права. Цель — обеспечить служилое дворянство рабочей силой. Источник социальной отсталости, восстаний (Разин, Пугачёв) и революционных настроений.</p>
-        <p class="source"><em>Соборное уложение 1649 г.</em></p>
       </article>
 
     </div>
@@ -1354,67 +1564,93 @@ h1, h2, h3, h4, p { margin: 0; }
     <div class="timeline-inner">
 
       <article class="card left" id="petr1">
-        <img class="card-img" src="pics/petr1_nikitina.jpg" loading="lazy" alt="Портрет Петра I, И.Н. Никитин">
+        <img class="card-img portrait" src="pics/petr1_nikitina.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-person">Личность</span>
           <time datetime="1689/1725">1689 – 1725</time>
         </div>
         <h3>Пётр I и его реформы</h3>
         <p class="body">Первый император Всероссийский. Цель — модернизация России по западному образцу. Реформировал армию, создал флот, ввёл подушную подать, Табель о рангах, Сенат, коллегии. Основал Санкт-Петербург (1703). Цена реформ — массовая мобилизация, гибель десятков тысяч на стройке Петербурга, восстания, культурный раскол на «европейскую» элиту и «русское» крестьянство. Получил империю европейского уровня ценой колоссального напряжения нации.</p>
-        <p class="source">Е. В. Анисимов. <em>Время петровских реформ</em></p>
       </article>
 
       <article class="card right" id="poltava">
+        <img class="card-img" src="pics/poltava_martin.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-event">Событие</span>
           <time datetime="1709-06-27">27 июня 1709</time>
         </div>
         <h3>Полтавская битва</h3>
         <p class="body">Решающее сражение Северной войны между Россией и Швецией. Армия Карла XII, считавшаяся непобедимой и разгромившая Россию под Нарвой (1700), была разгромлена под Полтавой. Швеция утратила статус великой державы, Россия стала ведущей силой на Балтике. Ништадтский мир (1721) закрепил за Россией Прибалтику, Пётр I принял титул «Императора Всероссийского». Один из главных военных триумфов русской истории.</p>
-        <p class="source"><em>История внешней политики России XVIII в.</em></p>
       </article>
 
       <article class="card left" id="ekaterina">
-        <img class="card-img" src="pics/ekaterina2-1763-rokotov+.jpg" loading="lazy" alt="Портрет Екатерины II, Ф.С. Рокотов, 1763">
+        <img class="card-img portrait" src="pics/ekaterina2-1763-rokotov+.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-idea">Идея</span>
           <time datetime="1762/1796">1762 – 1796</time>
         </div>
         <h3>Просвещённый абсолютизм Екатерины II</h3>
         <p class="body">Сочетание идей Просвещения с сохранением абсолютной власти. Екатерина переписывалась с Вольтером и Дидро, написала «Наказ» с цитатами из Монтескьё, провела губернскую реформу и секуляризацию. На словах — идеалы законности; на деле — расширение крепостного права, разделы Польши, подавление Пугачёва. Противоречие между декларируемыми идеалами и реальностью модернизации «сверху» в крепостной стране.</p>
-        <p class="source">А. Б. Каменский. <em>От Петра I до Павла I</em></p>
       </article>
 
       <article class="card right" id="war1812">
-        <img class="card-img" src="pics/Kutuzov_fili.jpg" loading="lazy" alt="«Военный совет в Филях», А.Д. Кившенко">
+        <img class="card-img" src="pics/Kutuzov_fili.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-event">Событие</span>
           <time datetime="1812">1812</time>
         </div>
         <h3>Отечественная война 1812</h3>
-        <p class="body">«Великая армия» Наполеона (более 600 000 человек) вторглась в Россию. Армия Кутузова отступала, заманивая противника вглубь. Бородинское сражение (26 августа) не дало решающего результата. После оставления Москвы и её пожара армия Наполеона была уничтожена холодом, голодом и партизанами. Война стала народной и моментом небывалого национального подъёма, вдохновила декабристов и роман «Война и мир». Россия стала «жандармом Европы».</p>
-        <p class="source">Е. В. Тарле. <em>Нашествие Наполеона на Россию</em></p>
+        <p class="body">Великая армия Наполеона (более 600 000 человек) вторглась в Россию в июне 1812 года. Армия Кутузова отступала, заманивая противника вглубь. Бородинское сражение (26 августа) не дало решающего результата. После оставления Москвы и её пожара армия Наполеона была уничтожена холодом, голодом и партизанами. Война стала народной и моментом небывалого национального подъёма, вдохновила декабристов и роман «Война и мир». Россия стала «жандармом Европы».</p>
       </article>
 
       <article class="card left" id="otmena">
+        <img class="card-img" src="pics/otmena_myasoedov.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-event">Событие</span>
           <time datetime="1861-02-19">19 февраля 1861</time>
         </div>
         <h3>Отмена крепостного права</h3>
         <p class="body">Манифест Александра II освободил около 23 млн помещичьих крестьян от личной зависимости. Последовал за поражением в Крымской войне, показавшим отсталость крепостной России. Реформа половинчатая: личная свобода, но землю надо выкупать (платежи отменили только в 1907). Открыла дорогу остальным «Великим реформам». Неполнота реформы породила «аграрный вопрос», ставший причиной революций 1905 и 1917 годов.</p>
-        <p class="source">Л. Г. Захарова. <em>Александр II</em></p>
       </article>
 
       <article class="card right" id="zapadniki">
-        <img class="card-img" src="pics/запалники_славянофилы.jpg" loading="lazy" alt="Западники и славянофилы">
+        <img class="card-img" src="pics/запалники_славянофилы.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-phenom">Явление</span>
           <time datetime="1830/1849">1830-е – 1840-е</time>
         </div>
         <h3>Западники и славянофилы</h3>
-        <p class="body">Два направления русской общественной мысли. Западники (Грановский, Кавелин, Белинский) — Россия часть Европы, путь её — догоняющая модернизация по западному образцу. Славянофилы (Хомяков, Киреевский, Аксаковы) — у России собственный путь, опирающийся на православие, общину и «соборность». Спор о цивилизационном выборе продолжается до сегодняшнего дня в формах «либералы vs. почвенники» и «западники vs. евразийцы».</p>
-        <p class="source">А. Валицкий. <em>В кругу консервативной утопии</em></p>
+        <p class="body">Два направления русской общественной мысли. Западники (Грановский, Кавелин, Белинский) — Россия часть Европы, путь её — догоняющая модернизация по западному образцу. Славянофилы (Хомяков, Киреевский, Аксаковы) — у России собственный путь, опирающийся на православие, общину и «соборность». Это вечный спор о цивилизационном выборе, но настоящий накал он получил позже — после проигранной Крымской войны, реформ и революционных потрясений начала XX века.</p>
+      </article>
+
+      <article class="card left" id="krymskaya">
+        <img class="card-img" src="pics/sinop_aivazovsky.jpg" loading="lazy" alt="">
+        <div class="card-meta">
+          <span class="tag tag-event">Событие</span>
+          <time datetime="1853/1856">1853 – 1856</time>
+        </div>
+        <h3>Крымская война</h3>
+        <p class="body">Война России против коалиции Великобритании, Франции, Османской империи и Сардинии. Поводом послужил спор о святых местах в Палестине, реальной причиной — обострение Восточного вопроса и страх европейских держав перед усилением России на Балканах. Ключевые события — оборона Севастополя (1854–1855), гибель адмиралов Нахимова и Корнилова, унизительный Парижский мир (1856) с запретом держать флот на Чёрном море. Поражение обнажило технологическое отставание николаевской России: парусный флот против пароходов, гладкоствольные ружья против нарезных. Шок от проигрыша запустил «Великие реформы» Александра II — отмену крепостного права, судебную, земскую, военную реформы. Стал ключевым аргументом «западников» и одновременно стимулом для нового витка дискуссии о русском пути.</p>
+      </article>
+
+      <article class="card right" id="rev1905">
+        <img class="card-img" src="pics/makovsky_9january.jpg" loading="lazy" alt="">
+        <div class="card-meta">
+          <span class="tag tag-event">Событие</span>
+          <time datetime="1904/1907">1904 – 1907</time>
+        </div>
+        <h3>Русско-японская война и революция 1905 года</h3>
+        <p class="body">Задуманная как «маленькая победоносная война», способ отвлечь общество от внутренних проблем, она обернулась катастрофой: падение Порт-Артура (1904), разгром при Цусиме (1905), Портсмутский мир с потерей Южного Сахалина. На фоне военных поражений и расстрела мирного шествия 9 января («Кровавое воскресенье») страну охватили массовые забастовки, крестьянские бунты, восстание на броненосце «Потёмкин», декабрьское восстание в Москве. Манифест 17 октября 1905 года даровал гражданские свободы и учреждал Государственную думу — впервые в истории России появился парламент. Революция показала глубину социальных противоречий: революционные кружки, наследники народников и западников, вырвались в массовую политику. Фактически — генеральная репетиция 1917 года.</p>
+      </article>
+
+      <article class="card left" id="pmv">
+        <img class="card-img" src="pics/wwi_brusilov_1916.jpg" loading="lazy" alt="">
+        <div class="card-meta">
+          <span class="tag tag-event">Событие</span>
+          <time datetime="1914/1918">1914 – 1918</time>
+        </div>
+        <h3>Первая мировая война</h3>
+        <p class="body">В августе 1914 Россия вступила в войну на стороне Антанты против Германии и Австро-Венгрии — формально ради защиты православной Сербии. Восточный фронт растянулся от Балтики до Чёрного моря. Брусиловский прорыв (1916) стал единственным крупным успехом; в целом война шла тяжело: миллионные потери, кризис снабжения, «министерская чехарда», скандалы вокруг Распутина. Война подорвала экономику и окончательно дискредитировала монархию в глазах элиты и города. В феврале 1917 года петроградские очереди за хлебом переросли в революцию, в течение недели Николай II отрёкся от престола — закончилось 300-летнее правление Романовых. Война, начатая под лозунгами славянского братства, обернулась крушением империи и стала непосредственным прологом Октябрьской революции.</p>
       </article>
 
     </div>
@@ -1455,80 +1691,73 @@ h1, h2, h3, h4, p { margin: 0; }
     <div class="timeline-inner">
 
       <article class="card left" id="oktyabr">
-        <img class="card-img" src="pics/october_rev2_штурм_зимнего.jpg" loading="lazy" alt="Штурм Зимнего дворца">
+        <img class="card-img" src="pics/october_rev2_штурм_зимнего.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-event">Событие</span>
           <time datetime="1917-10-25">25 окт. 1917</time>
         </div>
         <h3>Октябрьская революция</h3>
         <p class="body">Вооружённое восстание большевиков в Петрограде, свергнувшее Временное правительство. Спланировано Военно-революционным комитетом во главе с Троцким, идейно — Лениным. Штурм Зимнего, передача власти II съезду Советов. Декреты о мире и о земле. Цель — построение социализма; результат — первое в мире социалистическое государство, 5-летняя гражданская война (1918–1922) и эмиграция миллионов. Переломный момент XX века.</p>
-        <p class="source">Р. Пайпс. <em>Русская революция</em></p>
       </article>
 
       <article class="card right" id="lenin">
-        <img class="card-img" src="pics/ленинБроневик.jpg" loading="lazy" alt="Ленин на броневике у Финляндского вокзала">
+        <img class="card-img portrait" src="pics/ленинБроневик.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-person">Личность</span>
           <time datetime="1870/1924">1870 – 1924</time>
         </div>
         <h3>В. И. Ленин</h3>
         <p class="body">Создатель партии большевиков, идеолог и организатор Октябрьской революции, основатель Советского государства. Разработал концепцию партии «нового типа». После 1917 — глава Совнаркома: «военный коммунизм» (1918–1921), затем НЭП (1921). Подписал Брестский мир, утвердил создание СССР (1922). Хотел общество без эксплуатации; получил государство, ставшее тоталитарным при Сталине. Глобальное влияние на XX век.</p>
-        <p class="source">Д. А. Волкогонов. <em>Ленин</em></p>
       </article>
 
       <article class="card left" id="marxism">
-        <img class="card-img" src="pics/Краткий_курс_истории_ВКП(б)_(издание_1946_года).jpg" loading="lazy" alt="«Краткий курс истории ВКП(б)», издание 1946 г.">
+        <img class="card-img portrait contain" src="pics/Краткий_курс_истории_ВКП(б)_(издание_1946_года).jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-idea">Идея</span>
           <time datetime="1917/1991">1917 – 1991</time>
         </div>
         <h3>Марксизм-ленинизм как государственная идеология</h3>
         <p class="body">Официальная идеология СССР: соединение марксистской теории классовой борьбы с ленинской концепцией пролетарской революции и партии-авангарда. Закреплена в Программе ВКП(б)/КПСС и советских конституциях, обязательно преподавалась во всех вузах в курсах истмата, диамата и научного коммунизма. Декларировала построение бесклассового коммунистического общества. На практике обосновывала монополию КПСС, плановую экономику и подавление инакомыслия как «буржуазной идеологии». Идея «реального социализма» и неизбежной победы над капитализмом определяла внутреннюю и внешнюю политику СССР на протяжении 74 лет, особенно в эпоху Холодной войны.</p>
-        <p class="source">К. Маркс, В. И. Ленин · <em>Программа КПСС</em></p>
       </article>
 
       <article class="card right" id="stalinism">
-        <img class="card-img" src="pics/спасибоСталину.jpg" loading="lazy" alt="Плакат «Спасибо товарищу Сталину за счастливое детство»">
+        <img class="card-img portrait contain" src="pics/спасибоСталину.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-phenom">Явление</span>
           <time datetime="1928/1953">1928 – 1953</time>
         </div>
         <h3>Сталинизм</h3>
         <p class="body">Тоталитарная система и форсированная модернизация. Индустриализация (пятилетки) — тысячи заводов, металлургия. Коллективизация (1929–33) — насильственное объединение крестьян в колхозы — привела к голоду 1932–33 годов с миллионами жертв. «Большой террор» 1937–38: ~700 тыс. расстреляны, миллионы — через ГУЛАГ. Цель — «социализм в одной стране»; результат — победа в ВОВ, сверхдержава, но колоссальные жертвы.</p>
-        <p class="source">О. В. Хлевнюк. <em>Сталин</em></p>
       </article>
 
       <article class="card left" id="vov">
-        <img class="card-img" src="pics/znamapobedy.jpg" loading="lazy" alt="Знамя Победы над Рейхстагом, Е. Халдей, 1945">
+        <img class="card-img portrait" src="pics/znamapobedy.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-event">Событие</span>
           <time datetime="1941/1945">1941 – 1945</time>
         </div>
         <h3>Великая Отечественная война</h3>
         <p class="body">Война СССР против нацистской Германии. Началась 22 июня 1941 года внезапным нападением. После катастроф 1941–42 — переломные победы: Москва (1941), Сталинград (1942–43), Курск (1943). В мае 1945 Красная армия взяла Берлин. Цена: ~27 млн погибших советских граждан. Центральное событие советской исторической памяти и ключевой элемент российской идентичности до сегодняшнего дня. Основа международного авторитета СССР.</p>
-        <p class="source"><em>Великая Отечественная война</em>, в 12 т.</p>
       </article>
 
       <article class="card right" id="gagarin">
-        <img class="card-img" src="pics/гагарин.jpg" loading="lazy" alt="Юрий Гагарин в шлеме «СССР», 12 апреля 1961">
+        <img class="card-img" src="pics/гагарин.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-event">Событие</span>
           <time datetime="1961-04-12">12 апреля 1961</time>
         </div>
         <h3>Полёт Юрия Гагарина</h3>
-        <p class="body">Первый в истории человечества пилотируемый космический полёт. На корабле «Восток-1» Гагарин совершил виток вокруг Земли за 108 минут. Кульминация советской космической программы (Спутник-1 в 1957) и крупнейшая пропагандистская победа в Холодной войне. Превосходство удерживалось до американской высадки на Луну (1969). Одно из немногих событий XX века с однозначно позитивной оценкой в любых политических координатах.</p>
-        <p class="source">Я. К. Голованов. <em>Королёв</em></p>
+        <p class="body">Первый в истории человечества пилотируемый космический полёт. На корабле «Восток-1» Гагарин совершил виток вокруг Земли за 108 минут. Кульминация советской космической программы (Спутник-1 в 1957) и крупнейшая пропагандистская победа в Холодной войне. Одно из немногих событий XX века с однозначно позитивной оценкой в любых политических координатах.</p>
       </article>
 
       <article class="card left" id="perestroika">
-        <img class="card-img" src="pics/Горбачёв4.jpg" loading="lazy" alt="М.С. Горбачёв">
+        <img class="card-img" src="pics/Горбачёв4.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-phenom">Явление</span>
           <time datetime="1985/1991">1985 – 1991</time>
         </div>
         <h3>Перестройка</h3>
         <p class="body">Реформы М. С. Горбачёва: «ускорение», «гласность», «новое мышление». Цель — модернизировать социализм. Результат разошёлся с целями: гласность открыла обсуждение преступлений сталинизма; экономические реформы не помогли (дефицит, талоны); политическая либерализация привела к параду суверенитетов. Августовский путч ГКЧП и Беловежские соглашения — конец СССР. Пример того, как попытка реформ привела не к обновлению, а к крушению системы.</p>
-        <p class="source">А. С. Черняев. <em>Шесть лет с Горбачёвым</em></p>
       </article>
 
     </div>
@@ -1571,67 +1800,70 @@ h1, h2, h3, h4, p { margin: 0; }
     <div class="timeline-inner">
 
       <article class="card left" id="raspad">
+        <img class="card-img" src="pics/protest_eltsin.jpg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-event">Событие</span>
           <time datetime="1991-12">декабрь 1991</time>
         </div>
         <h3>Распад СССР</h3>
-        <p class="body">8 декабря 1991 лидеры России (Ельцин), Украины (Кравчук) и Беларуси (Шушкевич) подписали в Беловежской Пуще соглашение о роспуске СССР. 25 декабря Горбачёв ушёл в отставку, над Кремлём спущен советский флаг. На месте СССР возникло 15 независимых государств. Распад без масштабной войны, но повлёк миллионы перемещённых лиц, серию региональных конфликтов и глубокую экономическую депрессию 1990-х.</p>
-        <p class="source"><a href="https://www.levada.ru/" target="_blank" rel="noopener">Левада-Центр</a></p>
+        <p class="body">В декабре 1991 года лидеры России (Ельцин), Украины (Кравчук) и Беларуси (Шушкевич) подписали в Беловежской Пуще соглашение о роспуске СССР. 25 декабря Горбачёв ушёл в отставку, над Кремлём спущен советский флаг. На месте СССР возникло 15 независимых государств. Распад без масштабной войны, но повлёк миллионы перемещённых лиц, серию региональных конфликтов и глубокую экономическую депрессию 1990-х.</p>
       </article>
 
       <article class="card right" id="eltsin">
-        <img class="card-img" src="pics/eltsin%20on%20tank.jpeg" loading="lazy" alt="Б.Н. Ельцин на танке у Белого дома, август 1991">
+        <figure class="card-media" data-carousel>
+          <img class="card-img" src="pics/belyi_dom_1993.jpg" loading="lazy" alt="">
+          <img class="card-img" src="pics/eltsin%20on%20tank.jpeg" loading="lazy" alt="">
+        </figure>
         <div class="card-meta">
           <span class="tag tag-person">Личность</span>
           <time datetime="1991/1999">1991 – 1999</time>
         </div>
         <h3>Борис Ельцин</h3>
-        <p class="body">Первый президент РФ. Бывший член Политбюро, опала при Горбачёве сделала его символом оппозиции «номенклатуре». В августе 1991 выступил против ГКЧП, в декабре подписал Беловежские соглашения. Возглавил радикальные реформы 1992 года. В октябре 1993 разрешил политический кризис расстрелом Верховного Совета. Начал Первую чеченскую войну (1994–96). В декабре 1999 досрочно ушёл в отставку, передав власть Путину.</p>
-        <p class="source">Т. Колтон. <em>Ельцин. Жизнь</em></p>
+        <p class="body">Первый президент РФ. Бывший член Политбюро, опала при Горбачёве сделала его символом оппозиции «номенклатуре». В августе 1991 выступил против ГКЧП, в декабре устроил Беловежский путч, оформивший роспуск СССР. Возглавил радикальные реформы 1992 года. В октябре 1993 разрешил политический кризис расстрелом Верховного Совета. Начал Первую чеченскую войну (1994–96). В декабре 1999 досрочно ушёл в отставку, передав власть Путину.</p>
       </article>
 
       <article class="card left" id="shokovaya">
-        <img class="card-img" src="pics/чубайс.jpg" loading="lazy" alt="А.Б. Чубайс с приватизационным ваучером">
+        <figure class="card-media" data-carousel>
+          <img class="card-img" src="pics/rynok_uniform_90s.jpg" loading="lazy" alt="">
+          <img class="card-img portrait" src="pics/чубайс.jpg" loading="lazy" alt="">
+          <img class="card-img" src="pics/мавроди.jpg" loading="lazy" alt="">
+        </figure>
         <div class="card-meta">
           <span class="tag tag-phenom">Явление</span>
           <time datetime="1992/1996">1992 – 1996</time>
         </div>
         <h3>«Шоковая терапия» и приватизация</h3>
         <p class="body">Радикальные реформы Гайдара–Чубайса: либерализация цен (январь 1992), ваучерная приватизация (1992–94), залоговые аукционы (1995–96). Цель — переход к рыночной экономике. Результаты двойственны: частная собственность, рыночные институты — но гиперинфляция (~2500%), обесценивание сбережений, падение ВВП на 40% к 1998, дефолт, формирование «олигархов», рост бедности. «Лихие 90-е» — обоснование консервативного поворота 2000-х.</p>
-        <p class="source">Е. Т. Гайдар. <em>Гибель империи</em></p>
       </article>
 
       <article class="card right" id="putin">
-        <img class="card-img" src="pics/путин.jpg" loading="lazy" alt="В.В. Путин">
+        <img class="card-img portrait" src="pics/путин.jpg" loading="lazy" alt="" style="--obj-pos: center 28%">
         <div class="card-meta">
           <span class="tag tag-person">Личность</span>
           <time datetime="1999">1999 – наст. время</time>
         </div>
         <h3>Владимир Путин</h3>
         <p class="body">Второй и четвёртый президент РФ. Бывший офицер КГБ, директор ФСБ. Пришёл к власти на фоне Второй чеченской войны и роста цен на нефть. Первый период (2000-е): «стабилизация», ослабление олигархов, рост доходов. Второй период (с 2012): консервативный поворот, конфликт с Западом, Крым (2014), Сирия, СВО в Украине с 2022. Конституционные поправки 2020 обнулили его сроки. Определяющая фигура российской политики последней четверти века.</p>
-        <p class="source">F. Hill, C. Gaddy. <em>Mr. Putin</em></p>
       </article>
 
       <article class="card left" id="suverennaya">
+        <img class="card-img" src="pics/surkov_2010.jpeg" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-idea">Идея</span>
           <time datetime="2006">2000-е</time>
         </div>
-        <h3>«Суверенная демократия»</h3>
-        <p class="body">Концепция, сформулированная в 2006 году Владиславом Сурковым: Россия — демократия, но её формы определяются самой Россией, а не Западом; суверенитет важнее заимствованных извне процедур. Ответ на «цветные революции» 2003–2005. Параллельно — идеи «русского мира» и «многополярного мира». Определила внутреннюю политику (ограничение НКО как «иностранных агентов») и внешнюю (Грузия 2008, Крым 2014, СВО 2022).</p>
-        <p class="source">В. Сурков, <em>«Национализация будущего»</em>, 2006</p>
+        <h3>«Суверенная демократия» и «русский мир»</h3>
+        <p class="body">Концепция «суверенной демократии», сформулированная в 2006 году Владиславом Сурковым, была попыткой отделить «российскую» демократию от западной: суверенитет важнее заимствованных извне процедур. Идея была реакцией на «цветные революции» 2003–2005, но не прижилась — Суркова со временем отстранили, а его конструкция конкурировала с другой идеологией, «русским миром» (Стрелков, Малофеев, Дугин, Прилепин). В итоге верх взял именно «русский мир», но не в виде, в котором его представляли идеологи движения, а в гротескном — поскольку у руля остались дельцы 90-х. Результат — внешнеполитическая риторика «многополярного мира» при практической логике хозяйствующих субъектов.</p>
       </article>
 
       <article class="card right" id="konflikt">
-        <img class="card-img" src="pics/конфликт%20линия%20фронта.png" loading="lazy" alt="Линия фронта российско-украинского конфликта">
+        <img class="card-img" src="pics/конфликт%20линия%20фронта.png" loading="lazy" alt="">
         <div class="card-meta">
           <span class="tag tag-event">Событие</span>
           <time datetime="2014">2014, 2022 → <span class="live-dot" aria-hidden="true"></span><span class="live-label">live</span></time>
         </div>
         <h3>Российско-украинский конфликт</h3>
-        <p class="body">В феврале–марте 2014, после смены власти в Киеве в результате Евромайдана, Россия присоединила Крым (большинством стран мира признано аннексией). С весны 2014 — конфликт на востоке Украины. 24 февраля 2022 — «специальная военная операция»: полномасштабное вторжение. Заявленные цели Москвы — «демилитаризация», защита русскоязычных, предотвращение расширения НАТО. К 2026 РФ контролирует ~1/5 территории Украины, сотни тысяч жертв с обеих сторон. Май 2026 — переговоры при США, мира пока нет.</p>
-        <p class="source"><a href="https://aljazeera.com/" target="_blank" rel="noopener">Al Jazeera</a>, май 2026</p>
+        <p class="body">В феврале–марте 2014, после смены власти в Киеве в результате Евромайдана, Россия присоединила Крым. С весны 2014 — конфликт на востоке Украины. 24 февраля 2022 — «специальная военная операция»: полномасштабное вторжение. Заявленные цели Москвы — «демилитаризация», защита русскоязычных, предотвращение расширения НАТО. К 2026 РФ контролирует ~1/5 территории Украины, сотни тысяч жертв с обеих сторон. Май 2026 — переговоры при США, мира пока нет.</p>
       </article>
 
     </div>
@@ -1642,11 +1874,13 @@ h1, h2, h3, h4, p { margin: 0; }
 <footer class="site-footer">
   <div class="site-footer-inner">
     <div class="footer-title">Таймлайн <em>истории</em> России</div>
-    <div class="footer-meta">Финальный проект · Май 2026 · 31 элемент · 5 периодов</div>
+    <div class="footer-meta">Финальный проект · Май 2026 · 34 элемента · 5 периодов</div>
     <!-- <a class="footer-link" href="poster.html">Посмотреть как постер →</a> -->
     <div class="footer-tagline">События · Личности · Явления · Идеи</div>
   </div>
 </footer>
+
+<button id="to-top" type="button" aria-label="Наверх" title="Наверх">↑</button>
 
 <script>
   // Highlight active period chip in nav as user scrolls
@@ -1667,6 +1901,129 @@ h1, h2, h3, h4, p { margin: 0; }
     }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
 
     sections.forEach(s => observer.observe(s));
+  })();
+
+  // Carousel: cards with multiple images
+  (function() {
+    document.querySelectorAll('.card-media[data-carousel]').forEach(media => {
+      const slides = Array.from(media.querySelectorAll('.card-img'));
+      if (slides.length < 2) return;
+      slides[0].classList.add('active');
+      // counter (e.g. "1 / 3")
+      const counter = document.createElement('div');
+      counter.className = 'carousel-counter';
+      counter.textContent = `1 / ${slides.length}`;
+      media.appendChild(counter);
+      // dots
+      const dots = document.createElement('div');
+      dots.className = 'carousel-dots';
+      const buttons = slides.map((slide, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', `Слайд ${i + 1}`);
+        if (i === 0) b.setAttribute('aria-current', 'true');
+        b.addEventListener('click', () => go(i));
+        dots.appendChild(b);
+        return b;
+      });
+      media.appendChild(dots);
+      let cur = 0;
+      function go(idx) {
+        idx = ((idx % slides.length) + slides.length) % slides.length;
+        cur = idx;
+        slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+        buttons.forEach((b, i) => {
+          if (i === idx) b.setAttribute('aria-current', 'true');
+          else b.removeAttribute('aria-current');
+        });
+        counter.textContent = `${idx + 1} / ${slides.length}`;
+      }
+      // keyboard: arrows when figure focused
+      media.tabIndex = 0;
+      media.setAttribute('role', 'group');
+      media.setAttribute('aria-roledescription', 'карусель');
+      media.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft')  { go(cur - 1); e.preventDefault(); }
+        if (e.key === 'ArrowRight') { go(cur + 1); e.preventDefault(); }
+      });
+      // touch swipe
+      let touchX = null;
+      media.addEventListener('touchstart', e => { touchX = e.changedTouches[0].screenX; }, { passive: true });
+      media.addEventListener('touchend',   e => {
+        if (touchX === null) return;
+        const dx = e.changedTouches[0].screenX - touchX;
+        if (Math.abs(dx) > 40) go(cur + (dx < 0 ? 1 : -1));
+        touchX = null;
+      }, { passive: true });
+    });
+  })();
+
+  // A11y: aria-labelledby on each card pointing at its h3
+  (function() {
+    document.querySelectorAll('article.card').forEach(card => {
+      const h3 = card.querySelector('h3');
+      if (!h3) return;
+      if (!h3.id) h3.id = (card.id || 'card') + '-title';
+      card.setAttribute('aria-labelledby', h3.id);
+    });
+  })();
+
+  // Back-to-top button
+  (function() {
+    const btn = document.getElementById('to-top');
+    if (!btn) return;
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    const threshold = () => Math.max(800, window.innerHeight * 0.8);
+    function update() {
+      btn.classList.toggle('visible', window.scrollY > threshold());
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+
+  // Year indicator: shows current year as user scrolls based on visible card
+  (function() {
+    const yearEl = document.querySelector('#year-indicator');
+    const progressEl = document.querySelector('#year-progress-fill');
+    if (!yearEl || !progressEl) return;
+    const cards = Array.from(document.querySelectorAll('.card[id]'));
+    const MIN_YEAR = 862;
+    const MAX_YEAR = 2026;
+    function parseYear(dt) {
+      if (!dt) return null;
+      const m = dt.match(/^(-?\d{1,4})/);
+      return m ? parseInt(m[1], 10) : null;
+    }
+    function periodOf(card) {
+      const sec = card.closest('.period');
+      return sec ? sec.dataset.period : null;
+    }
+    let current = null;
+    const observer = new IntersectionObserver((entries) => {
+      // pick the entry closest to viewport top
+      let best = null;
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          if (!best || Math.abs(e.boundingClientRect.top) < Math.abs(best.boundingClientRect.top)) {
+            best = e;
+          }
+        }
+      });
+      if (best) updateFor(best.target);
+    }, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+    cards.forEach(c => observer.observe(c));
+    function updateFor(card) {
+      if (card === current) return;
+      current = card;
+      const t = card.querySelector('time[datetime]');
+      const year = parseYear(t && t.getAttribute('datetime'));
+      if (!year) return;
+      yearEl.textContent = year >= 1 ? `≈ ${year}` : '';
+      const pct = Math.max(0, Math.min(100, (year - MIN_YEAR) / (MAX_YEAR - MIN_YEAR) * 100));
+      progressEl.style.width = pct + '%';
+      const period = periodOf(card);
+      if (period) yearEl.parentElement.setAttribute('data-period', period);
+    }
   })();
 </script>
 
